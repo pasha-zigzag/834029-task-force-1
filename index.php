@@ -4,8 +4,8 @@ require './classes/Task.php';
 
 $task = new Task(1, 2);
 
-if($task->getNextStatus('approve') == Task::STATUS_IN_WORK) {
-    echo 'Следующий статус: ' . $task->getNextStatus('approve');
+if($task->getNextStatus('approve', 'customer') == Task::STATUS_IN_WORK) {
+    echo 'Следующий статус: ' . $task->getNextStatus('approve', 'customer');
 }
 
 echo '<hr/>';
