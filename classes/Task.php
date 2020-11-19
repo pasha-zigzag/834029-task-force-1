@@ -6,11 +6,13 @@ class Task {
     public const STATUS_IN_WORK = 'in_work';
     public const STATUS_PERFORMED = 'performed';
     public const STATUS_FAILED = 'failed';
+    public const STATUS_COMPLETED = 'completed';
 
     private const ACTION_CANCEL = 'cancel';
     private const ACTION_RESPOND = 'respond';
     private const ACTION_APPROVE = 'approve';
     private const ACTION_REFUSE = 'refuse';
+    private const ACTION_COMPLETE = 'complete';
 
     private string $current_status = self::STATUS_NEW;
     private int $executor_id;
@@ -21,14 +23,16 @@ class Task {
         self::STATUS_CANCELED => 'Завершено',
         self::STATUS_IN_WORK => 'В работе',
         self::STATUS_PERFORMED => 'Выполнено',
-        self::STATUS_FAILED => 'Провалено'
+        self::STATUS_FAILED => 'Провалено',
+        self::STATUS_COMPLETED => 'Выполнено'
     ];
 
     public static array $action_map = [
         self::ACTION_CANCEL => 'Завершить',
         self::ACTION_RESPOND => 'Откликнуться',
         self::ACTION_APPROVE => 'Утвердить',
-        self::ACTION_REFUSE => 'Отказаться'
+        self::ACTION_REFUSE => 'Отказаться',
+        self::ACTION_COMPLETE => 'Завершить'
     ];
 
     public static array $status_action_map = [
@@ -51,7 +55,7 @@ class Task {
                 self::ACTION_REFUSE => self::STATUS_FAILED
             ],
             'customer' => [
-                self::ACTION_CANCEL => self::STATUS_PERFORMED
+                self::ACTION_COMPLETE => self::STATUS_COMPLETED
             ]
         ],
         self::STATUS_PERFORMED => [
