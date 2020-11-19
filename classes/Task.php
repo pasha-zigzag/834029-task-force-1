@@ -8,11 +8,14 @@ class Task {
     public const STATUS_FAILED = 'failed';
     public const STATUS_COMPLETED = 'completed';
 
-    private const ACTION_CANCEL = 'cancel';
-    private const ACTION_RESPOND = 'respond';
-    private const ACTION_APPROVE = 'approve';
-    private const ACTION_REFUSE = 'refuse';
-    private const ACTION_COMPLETE = 'complete';
+    public const ACTION_CANCEL = 'cancel';
+    public const ACTION_RESPOND = 'respond';
+    public const ACTION_APPROVE = 'approve';
+    public const ACTION_REFUSE = 'refuse';
+    public const ACTION_COMPLETE = 'complete';
+
+    public const CUSTOMER_ROLE = 'customer';
+    public const EXECUTOR_ROLE = 'executor';
 
     private string $current_status = self::STATUS_NEW;
     private int $executor_id;
@@ -37,34 +40,34 @@ class Task {
 
     public static array $status_action_map = [
         self::STATUS_NEW => [
-            'executor' => [
+            self::EXECUTOR_ROLE => [
                 self::ACTION_RESPOND => null,
                 self::ACTION_REFUSE => null
             ],
-            'customer' => [
+            self::CUSTOMER_ROLE => [
                 self::ACTION_CANCEL => self::STATUS_CANCELED,
                 self::ACTION_APPROVE => self::STATUS_IN_WORK
             ]
         ],
         self::STATUS_CANCELED => [
-            'executor' => [],
-            'customer' => []
+            self::EXECUTOR_ROLE => [],
+            self::CUSTOMER_ROLE => []
         ],
         self::STATUS_IN_WORK => [
-            'executor' => [
+            self::EXECUTOR_ROLE => [
                 self::ACTION_REFUSE => self::STATUS_FAILED
             ],
-            'customer' => [
+            self::CUSTOMER_ROLE => [
                 self::ACTION_COMPLETE => self::STATUS_COMPLETED
             ]
         ],
         self::STATUS_PERFORMED => [
-            'executor' => [],
-            'customer' => []
+            self::EXECUTOR_ROLE => [],
+            self::CUSTOMER_ROLE => []
         ],
         self::STATUS_FAILED => [
-            'executor' => [],
-            'customer' => []
+            self::EXECUTOR_ROLE => [],
+            self::CUSTOMER_ROLE => []
         ]
     ];
 
@@ -95,11 +98,11 @@ class Task {
     }
 
     public function getAvailableExecutorActions(string $status): array {
-        return $this->getAvailableActions($status, 'executor');
+        return $this->getAvailableActions($status, self::EXECUTOR_ROLE);
     }
 
     public function getAvailableCustomerActions(string $status): array {
-        return $this->getAvailableActions($status, 'customer');
+        return $this->getAvailableActions($status, self::CUSTOMER_ROLE);
     }
 
     public function getNextStatus(string $action, string $role): string {
