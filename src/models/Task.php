@@ -1,5 +1,7 @@
 <?php
 
+namespace taskforce\models;
+
 class Task {
     public const STATUS_NEW = 'new';
     public const STATUS_CANCELED = 'canceled';
