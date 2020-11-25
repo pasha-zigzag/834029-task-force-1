@@ -73,19 +73,24 @@ class Task {
         ]
     ];
 
-    public function __construct(int $customer_id, int $executor_id = null) {
-        if($executor_id) {
-            $this->executor_id = $executor_id;
-        }
+    public static $role_map = [
+        self::CUSTOMER_ROLE => 'Заказчик',
+        self::EXECUTOR_ROLE => 'Исполнитель'
+    ];
+
+    public function __construct(int $customer_id, int $executor_id = 0) {
+        $this->executor_id = $executor_id;
         $this->customer_id = $customer_id;
     }
 
     public function getCurrentStatus(): string {
-        return self::$status_map[$this->current_status];
+        return $this->current_status;
     }
 
-    public function getStatusMap(string $status): array {
-        return self::$status_action_map[$status];
+    public static function getStatusMap(string $status): ?array {
+        if(isset(self::$status_map[$status])) {
+            return self::$status_action_map[$status];
+        }
     }
 
     private function getAvailableActions(string $status, string $role): array {
@@ -93,25 +98,36 @@ class Task {
         $result = [];
         if(!empty($actionsArray)) {
             foreach($actionsArray as $action => $status) {
-                $result[$action] = self::$action_map[$action];
+                $result[] = $action;
             }
         }
         return $result;
     }
 
-    public function getAvailableExecutorActions(string $status): array {
-        return $this->getAvailableActions($status, self::EXECUTOR_ROLE);
+
+    public function getAvailableExecutorActions(string $status): ?array {
+        if(isset(self::$status_map[$status])) {
+            return $this->getAvailableActions($status, self::EXECUTOR_ROLE);
+        }
     }
 
-    public function getAvailableCustomerActions(string $status): array {
-        return $this->getAvailableActions($status, self::CUSTOMER_ROLE);
+    public function getAvailableCustomerActions(string $status): ?array {
+        if(isset(self::$status_map[$status])) {
+            return $this->getAvailableActions($status, self::CUSTOMER_ROLE);
+        }
     }
 
     public function getNextStatus(string $action, string $role): string {
-        return self::$status_action_map[$this->current_status][$role][$action] ?? '';
+        if(isset(self::$action_map[$action]) && isset(self::$role_map[$role])) {
+            return self::$status_action_map[$this->current_status][$role][$action] ?? '';
+        }
     }
 
-    public function setStatus(string $newStatus): void {
-        $this->current_status = $newStatus;
+    public function setStatus(string $newStatus): bool {
+        if(isset(self::$status_map[$newStatus])) {
+            $this->current_status = $newStatus;
+            return true;
+        }
+        return false;
     }
 }
