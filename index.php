@@ -1,6 +1,8 @@
 <?php
 
-require './classes/Task.php';
+use taskforce\models\Task;
+
+require_once 'vendor/autoload.php';
 
 $task = new Task(1, 2);
 
