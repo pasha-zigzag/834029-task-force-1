@@ -1,0 +1,15 @@
+{
+    "name": "zigzag/taskforce",
+    "authors": [
+        {
+            "name": "Pavel.Zagainov",
+            "email": "pasha_zigzag@mail.ru"
+        }
+    ],
+    "require": {},
+    "autoload": {
+      "psr-4": {
+        "taskforce\\": "src/"
+      }
+    }
+}
