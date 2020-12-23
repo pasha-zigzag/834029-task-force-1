@@ -1,13 +1,16 @@
 <?php
 
+use taskforce\models\actions\ApproveAction;
 use taskforce\models\Task;
 
 require_once 'vendor/autoload.php';
 
 $task = new Task(1, 2);
 
-if($task->getNextStatus(Task::ACTION_APPROVE, Task::CUSTOMER_ROLE) == Task::STATUS_IN_WORK) {
-    echo 'Следующий статус: ' . $task->getNextStatus(Task::ACTION_APPROVE, Task::CUSTOMER_ROLE);
+$approveAction = new ApproveAction();
+
+if($task->getNextStatus($approveAction, Task::CUSTOMER_ROLE) == Task::STATUS_IN_WORK) {
+    echo 'Следующий статус: ' . $task->getNextStatus($approveAction, Task::CUSTOMER_ROLE);
 }
 
 echo '<hr/>';

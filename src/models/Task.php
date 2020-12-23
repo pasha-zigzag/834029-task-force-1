@@ -2,6 +2,13 @@
 
 namespace taskforce\models;
 
+use taskforce\models\actions\AbstractAction;
+use taskforce\models\actions\ApproveAction;
+use taskforce\models\actions\CancelAction;
+use taskforce\models\actions\CompleteAction;
+use taskforce\models\actions\RefuseAction;
+use taskforce\models\actions\RespondAction;
+
 class Task {
     public const STATUS_NEW = 'new';
     public const STATUS_CANCELED = 'canceled';
@@ -10,17 +17,17 @@ class Task {
     public const STATUS_FAILED = 'failed';
     public const STATUS_COMPLETED = 'completed';
 
-    public const ACTION_CANCEL = 'cancel';
-    public const ACTION_RESPOND = 'respond';
-    public const ACTION_APPROVE = 'approve';
-    public const ACTION_REFUSE = 'refuse';
-    public const ACTION_COMPLETE = 'complete';
+    public const ACTION_CANCEL = CancelAction::class;
+    public const ACTION_RESPOND = RespondAction::class;
+    public const ACTION_APPROVE = ApproveAction::class;
+    public const ACTION_REFUSE = RefuseAction::class;
+    public const ACTION_COMPLETE = CompleteAction::class;
 
     public const CUSTOMER_ROLE = 'customer';
-    public const EXECUTOR_ROLE = 'executor';
+    public const WORKER_ROLE = 'worker';
 
     private string $current_status = self::STATUS_NEW;
-    private int $executor_id;
+    private int $worker_id;
     private int $customer_id;
 
     public static array $status_map = [
@@ -32,17 +39,9 @@ class Task {
         self::STATUS_COMPLETED => 'Выполнено'
     ];
 
-    public static array $action_map = [
-        self::ACTION_CANCEL => 'Завершить',
-        self::ACTION_RESPOND => 'Откликнуться',
-        self::ACTION_APPROVE => 'Утвердить',
-        self::ACTION_REFUSE => 'Отказаться',
-        self::ACTION_COMPLETE => 'Завершить'
-    ];
-
     public static array $status_action_map = [
         self::STATUS_NEW => [
-            self::EXECUTOR_ROLE => [
+            self::WORKER_ROLE => [
                 self::ACTION_RESPOND => null,
                 self::ACTION_REFUSE => null
             ],
@@ -52,11 +51,11 @@ class Task {
             ]
         ],
         self::STATUS_CANCELED => [
-            self::EXECUTOR_ROLE => [],
+            self::WORKER_ROLE => [],
             self::CUSTOMER_ROLE => []
         ],
         self::STATUS_IN_WORK => [
-            self::EXECUTOR_ROLE => [
+            self::WORKER_ROLE => [
                 self::ACTION_REFUSE => self::STATUS_FAILED
             ],
             self::CUSTOMER_ROLE => [
@@ -64,22 +63,23 @@ class Task {
             ]
         ],
         self::STATUS_PERFORMED => [
-            self::EXECUTOR_ROLE => [],
+            self::WORKER_ROLE => [],
             self::CUSTOMER_ROLE => []
         ],
         self::STATUS_FAILED => [
-            self::EXECUTOR_ROLE => [],
+            self::WORKER_ROLE => [],
             self::CUSTOMER_ROLE => []
         ]
     ];
 
     public static $role_map = [
         self::CUSTOMER_ROLE => 'Заказчик',
-        self::EXECUTOR_ROLE => 'Исполнитель'
+        self::WORKER_ROLE => 'Исполнитель'
     ];
 
-    public function __construct(int $customer_id, int $executor_id = 0) {
-        $this->executor_id = $executor_id;
+    public function __construct(int $customer_id, int $worker_id = 0)
+    {
+        $this->worker_id = $worker_id;
         $this->customer_id = $customer_id;
     }
 
@@ -87,47 +87,63 @@ class Task {
         return $this->current_status;
     }
 
-    public static function getStatusMap(string $status): ?array {
+    public static function getStatusMap(string $status): ?array
+    {
         if(isset(self::$status_map[$status])) {
             return self::$status_action_map[$status];
         }
     }
 
-    private function getAvailableActions(string $status, string $role): array {
+    private function getAvailableActions(string $status, string $role): array
+    {
         $actionsArray = self::$status_action_map[$status][$role];
         $result = [];
         if(!empty($actionsArray)) {
             foreach($actionsArray as $action => $status) {
-                $result[] = $action;
+                $result[] = new $action();
             }
         }
         return $result;
     }
 
 
-    public function getAvailableExecutorActions(string $status): ?array {
+    public function getAvailableWorkerActions(string $status): ?array
+    {
         if(isset(self::$status_map[$status])) {
-            return $this->getAvailableActions($status, self::EXECUTOR_ROLE);
+            return $this->getAvailableActions($status, self::WORKER_ROLE);
         }
     }
 
-    public function getAvailableCustomerActions(string $status): ?array {
+    public function getAvailableCustomerActions(string $status): ?array
+    {
         if(isset(self::$status_map[$status])) {
             return $this->getAvailableActions($status, self::CUSTOMER_ROLE);
         }
     }
 
-    public function getNextStatus(string $action, string $role): string {
-        if(isset(self::$action_map[$action]) && isset(self::$role_map[$role])) {
-            return self::$status_action_map[$this->current_status][$role][$action] ?? '';
+    public function getNextStatus(AbstractAction $action, string $role): string
+    {
+        if(isset(self::$role_map[$role])) {
+            return self::$status_action_map[$this->current_status][$role][get_class($action)] ?? '';
         }
     }
 
-    public function setStatus(string $newStatus): bool {
+    public function setStatus(string $newStatus): bool
+    {
         if(isset(self::$status_map[$newStatus])) {
             $this->current_status = $newStatus;
             return true;
         }
         return false;
+    }
+
+    public function getCustomerId()
+    {
+        return $this->customer_id;
+    }
+
+    public function getWorkerId()
+    {
+        return $this->worker_id;
     }
 }
