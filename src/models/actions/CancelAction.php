@@ -19,11 +19,8 @@ class CancelAction extends AbstractAction
         return 'Завершить';
     }
 
-    public function checkPermission(Task $task, int $customer_id, int $worker_id): bool
+    public function checkPermission(int $worker_id, int $customer_id, int $user_id): bool
     {
-        if($task->getCurrentStatus() === 'new' && $task->getCustomerId() === $customer_id) {
-            return true;
-        }
-        return false;
+        return $customer_id === $user_id;
     }
 }

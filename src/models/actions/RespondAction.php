@@ -19,8 +19,8 @@ class RespondAction extends AbstractAction
         return 'Откликнуться';
     }
 
-    public function checkPermission(Task $task, int $customer_id, int $worker_id) :bool
+    public function checkPermission(int $worker_id, int $customer_id, int $user_id) :bool
     {
-        // TODO: Implement checkPermission() method.
+        return $worker_id === $user_id;
     }
 }
