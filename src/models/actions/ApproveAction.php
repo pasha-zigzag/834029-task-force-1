@@ -8,12 +8,12 @@ use taskforce\models\Task;
 
 class ApproveAction extends AbstractAction
 {
-    public static function getValue() :string
+    public function getValue() :string
     {
         return 'approve';
     }
 
-    public static function getName() :string
+    public function getName() :string
     {
         return 'Утвердить';
     }

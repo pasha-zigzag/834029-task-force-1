@@ -9,12 +9,12 @@ use taskforce\models\Task;
 class RespondAction extends AbstractAction
 {
 
-    public static function getValue() :string
+    public function getValue() :string
     {
         return 'respond';
     }
 
-    public static function getName() :string
+    public function getName() :string
     {
         return 'Откликнуться';
     }

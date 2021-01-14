@@ -9,12 +9,12 @@ use taskforce\models\Task;
 class CancelAction extends AbstractAction
 {
 
-    public static function getValue() :string
+    public function getValue() :string
     {
         return 'cancel';
     }
 
-    public static function getName() :string
+    public function getName() :string
     {
         return 'Завершить';
     }

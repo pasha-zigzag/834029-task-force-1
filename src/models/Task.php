@@ -10,6 +10,9 @@ use taskforce\models\actions\RefuseAction;
 use taskforce\models\actions\RespondAction;
 
 class Task {
+    private int $worker_id;
+    private int $customer_id;
+
     public const STATUS_NEW = 'new';
     public const STATUS_CANCELED = 'canceled';
     public const STATUS_IN_WORK = 'in_work';
@@ -17,15 +20,7 @@ class Task {
     public const STATUS_FAILED = 'failed';
     public const STATUS_COMPLETED = 'completed';
 
-    public CancelAction $action_cancel;
-    public RespondAction $action_respond;
-    public ApproveAction $action_approve;
-    public RefuseAction $action_refuse;
-    public CompleteAction $action_complete;
-
     private string $current_status = self::STATUS_NEW;
-    private int $worker_id;
-    private int $customer_id;
 
     public static array $status_map = [
         self::STATUS_NEW => 'Новое',
@@ -38,39 +33,55 @@ class Task {
 
     public static array $status_action_map = [
         self::STATUS_NEW => [
-            'action_respond' => null,
-            'action_refuse' => null,
-            'action_cancel' => self::STATUS_CANCELED,
-            'action_approve' => self::STATUS_IN_WORK
+            'respond' => null,
+            'refuse' => null,
+            'cancel' => self::STATUS_CANCELED,
+            'approve' => self::STATUS_IN_WORK
         ],
         self::STATUS_IN_WORK => [
-            'action_refuse' => self::STATUS_FAILED,
-            'action_complete' => self::STATUS_COMPLETED
+            'refuse' => self::STATUS_FAILED,
+            'complete' => self::STATUS_COMPLETED
         ],
         self::STATUS_CANCELED => [],
         self::STATUS_PERFORMED => [],
         self::STATUS_FAILED => []
     ];
 
+    public static function getAvailableActionsForStatus($status) {
+        switch ($status) {
+            case self::STATUS_NEW:
+                return [
+                    new RespondAction(),
+                    new RefuseAction(),
+                    new CancelAction(),
+                    new ApproveAction()
+                ];
+            case self::STATUS_IN_WORK:
+                return [
+                    new RefuseAction(),
+                    new CompleteAction()
+                ];
+            case self::STATUS_CANCELED:
+            case self::STATUS_PERFORMED:
+            case self::STATUS_FAILED:
+                return [];
+        }
+    }
+
     public function __construct(int $customer_id, int $worker_id = 0)
     {
         $this->worker_id = $worker_id;
         $this->customer_id = $customer_id;
-        $this->action_cancel = new CancelAction();
-        $this->action_respond = new RespondAction();
-        $this->action_approve = new ApproveAction();
-        $this->action_refuse = new RefuseAction();
-        $this->action_complete = new CompleteAction();
     }
 
     public function getAvailableActions(string $status, int $user_id): array
     {
-        $actionsArray = self::$status_action_map[$status];
+        $actionsArray = self::getAvailableActionsForStatus($status);
         $result = [];
         if(!empty($actionsArray)) {
-            foreach($actionsArray as $action => $status) {
-                if($this->$action->checkPermission($this->worker_id, $this->customer_id, $user_id)) {
-                    $result[] = $this->$action;
+            foreach($actionsArray as $action) {
+                if($action->checkPermission($this->worker_id, $this->customer_id, $user_id)) {
+                    $result[] = $action;
                 }
             }
         }
@@ -79,7 +90,7 @@ class Task {
 
     public function getNextStatus(AbstractAction $action): string
     {
-        return self::$status_action_map[$this->current_status]['action_'.$action->getValue()] ?? '';
+        return self::$status_action_map[$this->current_status][$action->getValue()] ?? '';
     }
 
     public static function getStatusMap(string $status): ?array

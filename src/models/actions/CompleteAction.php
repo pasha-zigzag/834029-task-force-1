@@ -8,12 +8,12 @@ use taskforce\models\Task;
 
 class CompleteAction extends AbstractAction
 {
-    public static function getValue(): string
+    public function getValue(): string
     {
         return 'complete';
     }
 
-    public static function getName(): string
+    public function getName(): string
     {
         return 'Завершить';
     }

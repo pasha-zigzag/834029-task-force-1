@@ -9,12 +9,12 @@ use taskforce\models\Task;
 class RefuseAction extends AbstractAction
 {
 
-    public static function getValue(): string
+    public function getValue(): string
     {
         return 'refuse';
     }
 
-    public static function getName(): string
+    public function getName(): string
     {
         return 'Отказаться';
     }
