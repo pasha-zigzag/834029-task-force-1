@@ -88,9 +88,9 @@ class Task {
         return $result;
     }
 
-    public function getNextStatus(AbstractAction $action): string
+    public function getNextStatus(AbstractAction $action): ?string
     {
-        return self::$status_action_map[$this->current_status][$action->getValue()] ?? '';
+        return self::$status_action_map[$this->current_status][$action->getValue()] ?? null;
     }
 
     public static function getStatusMap(string $status): ?array
@@ -100,16 +100,17 @@ class Task {
         }
     }
 
-    public function getCurrentStatus(): string {
+    public function getCurrentStatus(): string
+    {
         return $this->current_status;
     }
 
-    public function getCustomerId()
+    public function getCustomerId(): int
     {
         return $this->customer_id;
     }
 
-    public function getWorkerId()
+    public function getWorkerId(): int
     {
         return $this->worker_id;
     }
