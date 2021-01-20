@@ -20,7 +20,7 @@ class Task {
     public const STATUS_FAILED = 'failed';
     public const STATUS_COMPLETED = 'completed';
 
-    private string $current_status = self::STATUS_NEW;
+    private string $current_status;
 
     public static array $status_map = [
         self::STATUS_NEW => 'Новое',
@@ -47,7 +47,16 @@ class Task {
         self::STATUS_FAILED => []
     ];
 
-    public static function getAvailableActionsForStatus($status) {
+    public function __construct(int $customer_id, int $worker_id = 0, string $status = self::STATUS_NEW)
+    {
+        $this->worker_id = $worker_id;
+        $this->customer_id = $customer_id;
+
+        $this->current_status = $status;
+    }
+
+    public static function getAvailableActionsForStatus($status): array
+    {
         switch ($status) {
             case self::STATUS_NEW:
                 return [
@@ -68,12 +77,6 @@ class Task {
         }
     }
 
-    public function __construct(int $customer_id, int $worker_id = 0)
-    {
-        $this->worker_id = $worker_id;
-        $this->customer_id = $customer_id;
-    }
-
     public function getAvailableActions(string $status, int $user_id): array
     {
         $actionsArray = self::getAvailableActionsForStatus($status);
@@ -91,6 +94,15 @@ class Task {
     public function getNextStatus(AbstractAction $action): ?string
     {
         return self::$status_action_map[$this->current_status][$action->getValue()] ?? null;
+    }
+
+    private function validateStatus(string $status): bool
+    {
+        if(isset(self::$status_map[$status])) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public static function getStatusMap(string $status): ?array
