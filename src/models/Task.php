@@ -2,6 +2,7 @@
 
 namespace taskforce\models;
 
+use taskforce\exceptions\NotValidStatusException;
 use taskforce\models\actions\AbstractAction;
 use taskforce\models\actions\ApproveAction;
 use taskforce\models\actions\CancelAction;
@@ -52,6 +53,9 @@ class Task {
         $this->worker_id = $worker_id;
         $this->customer_id = $customer_id;
 
+        if(!self::validateStatus($status)) {
+            throw new NotValidStatusException('Не корректный статус');
+        }
         $this->current_status = $status;
     }
 
@@ -79,6 +83,9 @@ class Task {
 
     public function getAvailableActions(string $status, int $user_id): array
     {
+        if(!self::validateStatus($status)) {
+            throw new NotValidStatusException('Не корректный статус');
+        }
         $actionsArray = self::getAvailableActionsForStatus($status);
         $result = [];
         if(!empty($actionsArray)) {
@@ -96,20 +103,20 @@ class Task {
         return self::$status_action_map[$this->current_status][$action->getValue()] ?? null;
     }
 
-    private function validateStatus(string $status): bool
+    private static function validateStatus(string $status): bool
     {
         if(isset(self::$status_map[$status])) {
             return true;
-        } else {
-            return false;
         }
+        return false;
     }
 
     public static function getStatusMap(string $status): ?array
     {
-        if(isset(self::$status_map[$status])) {
-            return self::$status_action_map[$status];
+        if(!self::validateStatus($status)) {
+            throw new NotValidStatusException('Не корректный статус');
         }
+        return self::$status_action_map[$status];
     }
 
     public function getCurrentStatus(): string
@@ -129,10 +136,11 @@ class Task {
 
     public function setStatus(string $newStatus): bool
     {
-        if(isset(self::$status_map[$newStatus])) {
-            $this->current_status = $newStatus;
-            return true;
+        if(!self::validateStatus($newStatus)) {
+            throw new NotValidStatusException('Не корректный статус');
         }
-        return false;
+
+        $this->current_status = $newStatus;
+        return true;
     }
 }
