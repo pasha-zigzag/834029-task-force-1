@@ -10,9 +10,13 @@ CREATE TABLE `task` (
   `latitude` decimal(8,6) DEFAULT NULL,
   `longitude` decimal(8,6) DEFAULT NULL,
   `city_id` int UNSIGNED DEFAULT NULL,
+  `customer_id` int UNSIGNED NOT NULL,
+  `worker_id` int UNSIGNED NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
   INDEX (`category_id`),
-  INDEX (`city_id`)
+  INDEX (`city_id`),
+  INDEX (`customer_id`),
+  INDEX (`worker_id`)
 );
 
 
@@ -33,6 +37,7 @@ CREATE TABLE `user` (
 	`avatar` TEXT DEFAULT NULL,
 	`role` enum('customer','worker') NOT NULL DEFAULT 'customer',
 	`birthday` DATETIME NOT NULL,
+    `about` TEXT DEFAULT NULL,
 	`phone` TEXT DEFAULT NULL,
 	`skype` TEXT DEFAULT NULL,
 	`telegram` TEXT DEFAULT NULL,
@@ -123,6 +128,10 @@ CREATE TABLE `portfolio` (
 ALTER TABLE `task` ADD CONSTRAINT `task_fk0` FOREIGN KEY (`category_id`) REFERENCES `category`(`id`);
 
 ALTER TABLE `task` ADD CONSTRAINT `task_fk1` FOREIGN KEY (`city_id`) REFERENCES `city`(`id`);
+
+ALTER TABLE `task` ADD CONSTRAINT `task_fk2` FOREIGN KEY (`customer_id`) REFERENCES `user`(`id`);
+
+ALTER TABLE `task` ADD CONSTRAINT `task_fk3` FOREIGN KEY (`worker_id`) REFERENCES `user`(`id`);
 
 ALTER TABLE `user` ADD CONSTRAINT `user_fk0` FOREIGN KEY (`city_id`) REFERENCES `city`(`id`);
 
