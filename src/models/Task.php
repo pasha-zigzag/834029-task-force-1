@@ -17,7 +17,6 @@ class Task {
     public const STATUS_NEW = 'new';
     public const STATUS_CANCELED = 'canceled';
     public const STATUS_IN_WORK = 'in_work';
-    public const STATUS_PERFORMED = 'performed';
     public const STATUS_FAILED = 'failed';
     public const STATUS_COMPLETED = 'completed';
 
@@ -27,7 +26,6 @@ class Task {
         self::STATUS_NEW => 'Новое',
         self::STATUS_CANCELED => 'Завершено',
         self::STATUS_IN_WORK => 'В работе',
-        self::STATUS_PERFORMED => 'Выполнено',
         self::STATUS_FAILED => 'Провалено',
         self::STATUS_COMPLETED => 'Выполнено'
     ];
@@ -44,8 +42,8 @@ class Task {
             'complete' => self::STATUS_COMPLETED
         ],
         self::STATUS_CANCELED => [],
-        self::STATUS_PERFORMED => [],
-        self::STATUS_FAILED => []
+        self::STATUS_FAILED => [],
+        self::STATUS_COMPLETED => []
     ];
 
     public function __construct(int $customer_id, int $worker_id = 0, string $status = self::STATUS_NEW)
@@ -75,8 +73,8 @@ class Task {
                     new CompleteAction()
                 ];
             case self::STATUS_CANCELED:
-            case self::STATUS_PERFORMED:
             case self::STATUS_FAILED:
+            case self::STATUS_COMPLETED:
                 return [];
         }
     }
