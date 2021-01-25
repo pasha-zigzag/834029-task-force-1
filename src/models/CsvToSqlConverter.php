@@ -91,9 +91,10 @@ class CsvToSqlConverter
     {
         $string = '(';
         foreach($row as $col) {
-            $string .= $quote ? "'" : "";
-            $string .= $col;
-            $string .= $quote ? "'" : "";
+            $val = $col ? $col : 'NULL';
+            $string .= $quote && $val !== 'NULL' ? "'" : "";
+            $string .= $val;
+            $string .= $quote && $val !== 'NULL' ? "'" : "";
             $string .= ', ';
         }
         $string = rtrim($string, ", ");
@@ -105,7 +106,8 @@ class CsvToSqlConverter
     {
         $string = '';
         for($i = 0; $i < count($cols); $i++) {
-            $string .= $cols[$i] . "='" . $row[$i] . "', ";
+            $val = $row[$i] ? "'".$row[$i]."'" : 'NULL';
+            $string .= $cols[$i] . "=" . $val . ", ";
         }
         $string = rtrim($string, ', ');
         return $string;

@@ -61,7 +61,7 @@ try {
 }
 
 try {
-    $converter = new CsvToSqlConverter('data/replies.csv', 'review');
+    $converter = new CsvToSqlConverter('data/replies.csv', 'response');
     $converter->createInsertSql();
 } catch (FileNotExistException | CantWriteFileException $e) {
     echo $e->getMessage();

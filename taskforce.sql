@@ -7,11 +7,11 @@ CREATE TABLE `task` (
   `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `finish_at` datetime DEFAULT NULL,
   `status` enum('new','canceled','in_work','failed','completed') NOT NULL DEFAULT 'new',
-  `latitude` decimal(8,6) DEFAULT NULL,
-  `longitude` decimal(8,6) DEFAULT NULL,
+  `latitude` decimal(9,6) DEFAULT NULL,
+  `longitude` decimal(9,6) DEFAULT NULL,
   `city_id` int UNSIGNED DEFAULT NULL,
   `customer_id` int UNSIGNED NOT NULL,
-  `worker_id` int UNSIGNED NOT NULL DEFAULT 0,
+  `worker_id` int UNSIGNED DEFAULT NULL,
   PRIMARY KEY (`id`),
   INDEX (`category_id`),
   INDEX (`city_id`),
@@ -33,10 +33,10 @@ CREATE TABLE `user` (
 	`email` TEXT NOT NULL,
 	`password_hash` text NOT NULL,
 	`register_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-	`city_id` INT UNSIGNED NOT NULL,
+	`city_id` INT UNSIGNED DEFAULT NULL,
 	`avatar` TEXT DEFAULT NULL,
 	`role` enum('customer','worker') NOT NULL DEFAULT 'customer',
-	`birthday` DATETIME NOT NULL,
+	`birthday` DATETIME DEFAULT NULL,
     `about` TEXT DEFAULT NULL,
 	`phone` TEXT DEFAULT NULL,
 	`skype` TEXT DEFAULT NULL,
@@ -66,8 +66,8 @@ CREATE TABLE `response` (
 CREATE TABLE `city` (
 	`id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
 	`name` TEXT NOT NULL,
-	`latitude` DECIMAL(8,6) DEFAULT NULL,
-	`longitude` DECIMAL(8,6) DEFAULT NULL,
+	`latitude` DECIMAL(9,6) DEFAULT NULL,
+	`longitude` DECIMAL(9,6) DEFAULT NULL,
 	PRIMARY KEY (`id`)
 );
 
