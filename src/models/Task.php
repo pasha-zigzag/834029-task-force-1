@@ -57,7 +57,7 @@ class Task {
         $this->current_status = $status;
     }
 
-    public static function getAvailableActionsForStatus($status): array
+    public static function getAvailableActionsForStatus(string $status): array
     {
         switch ($status) {
             case self::STATUS_NEW:
