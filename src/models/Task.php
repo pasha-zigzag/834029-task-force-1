@@ -2,6 +2,7 @@
 
 namespace taskforce\models;
 
+use taskforce\exceptions\NotValidStatusException;
 use taskforce\models\actions\AbstractAction;
 use taskforce\models\actions\ApproveAction;
 use taskforce\models\actions\CancelAction;
@@ -16,17 +17,15 @@ class Task {
     public const STATUS_NEW = 'new';
     public const STATUS_CANCELED = 'canceled';
     public const STATUS_IN_WORK = 'in_work';
-    public const STATUS_PERFORMED = 'performed';
     public const STATUS_FAILED = 'failed';
     public const STATUS_COMPLETED = 'completed';
 
-    private string $current_status = self::STATUS_NEW;
+    private string $current_status;
 
     public static array $status_map = [
         self::STATUS_NEW => 'Новое',
         self::STATUS_CANCELED => 'Завершено',
         self::STATUS_IN_WORK => 'В работе',
-        self::STATUS_PERFORMED => 'Выполнено',
         self::STATUS_FAILED => 'Провалено',
         self::STATUS_COMPLETED => 'Выполнено'
     ];
@@ -43,11 +42,23 @@ class Task {
             'complete' => self::STATUS_COMPLETED
         ],
         self::STATUS_CANCELED => [],
-        self::STATUS_PERFORMED => [],
-        self::STATUS_FAILED => []
+        self::STATUS_FAILED => [],
+        self::STATUS_COMPLETED => []
     ];
 
-    public static function getAvailableActionsForStatus($status) {
+    public function __construct(int $customer_id, int $worker_id = 0, string $status = self::STATUS_NEW)
+    {
+        $this->worker_id = $worker_id;
+        $this->customer_id = $customer_id;
+
+        if(!self::validateStatus($status)) {
+            throw new NotValidStatusException('Не корректный статус');
+        }
+        $this->current_status = $status;
+    }
+
+    public static function getAvailableActionsForStatus(string $status): array
+    {
         switch ($status) {
             case self::STATUS_NEW:
                 return [
@@ -62,20 +73,17 @@ class Task {
                     new CompleteAction()
                 ];
             case self::STATUS_CANCELED:
-            case self::STATUS_PERFORMED:
             case self::STATUS_FAILED:
+            case self::STATUS_COMPLETED:
                 return [];
         }
     }
 
-    public function __construct(int $customer_id, int $worker_id = 0)
-    {
-        $this->worker_id = $worker_id;
-        $this->customer_id = $customer_id;
-    }
-
     public function getAvailableActions(string $status, int $user_id): array
     {
+        if(!self::validateStatus($status)) {
+            throw new NotValidStatusException('Не корректный статус');
+        }
         $actionsArray = self::getAvailableActionsForStatus($status);
         $result = [];
         if(!empty($actionsArray)) {
@@ -93,11 +101,20 @@ class Task {
         return self::$status_action_map[$this->current_status][$action->getValue()] ?? null;
     }
 
-    public static function getStatusMap(string $status): ?array
+    private static function validateStatus(string $status): bool
     {
         if(isset(self::$status_map[$status])) {
-            return self::$status_action_map[$status];
+            return true;
         }
+        return false;
+    }
+
+    public static function getStatusMap(string $status): ?array
+    {
+        if(!self::validateStatus($status)) {
+            throw new NotValidStatusException('Не корректный статус');
+        }
+        return self::$status_action_map[$status];
     }
 
     public function getCurrentStatus(): string
@@ -117,10 +134,11 @@ class Task {
 
     public function setStatus(string $newStatus): bool
     {
-        if(isset(self::$status_map[$newStatus])) {
-            $this->current_status = $newStatus;
-            return true;
+        if(!self::validateStatus($newStatus)) {
+            throw new NotValidStatusException('Не корректный статус');
         }
-        return false;
+
+        $this->current_status = $newStatus;
+        return true;
     }
 }
