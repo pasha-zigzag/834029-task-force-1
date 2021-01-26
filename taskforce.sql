@@ -7,8 +7,8 @@ CREATE TABLE `task` (
   `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `finish_at` datetime DEFAULT NULL,
   `status` enum('new','canceled','in_work','failed','completed') NOT NULL DEFAULT 'new',
-  `latitude` decimal(9,6) DEFAULT NULL,
-  `longitude` decimal(9,6) DEFAULT NULL,
+  `latitude` decimal(10,7) DEFAULT NULL,
+  `longitude` decimal(10,7) DEFAULT NULL,
   `city_id` int UNSIGNED DEFAULT NULL,
   `customer_id` int UNSIGNED NOT NULL,
   `worker_id` int UNSIGNED DEFAULT NULL,
@@ -66,8 +66,8 @@ CREATE TABLE `response` (
 CREATE TABLE `city` (
 	`id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
 	`name` TEXT NOT NULL,
-	`latitude` DECIMAL(9,6) DEFAULT NULL,
-	`longitude` DECIMAL(9,6) DEFAULT NULL,
+	`latitude` DECIMAL(10,7) DEFAULT NULL,
+	`longitude` DECIMAL(10,7) DEFAULT NULL,
 	PRIMARY KEY (`id`)
 );
 
