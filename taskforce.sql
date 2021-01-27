@@ -7,12 +7,16 @@ CREATE TABLE `task` (
   `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `finish_at` datetime DEFAULT NULL,
   `status` enum('new','canceled','in_work','failed','completed') NOT NULL DEFAULT 'new',
-  `latitude` decimal(8,6) DEFAULT NULL,
-  `longitude` decimal(8,6) DEFAULT NULL,
+  `latitude` decimal(10,7) DEFAULT NULL,
+  `longitude` decimal(10,7) DEFAULT NULL,
   `city_id` int UNSIGNED DEFAULT NULL,
+  `customer_id` int UNSIGNED NOT NULL,
+  `worker_id` int UNSIGNED DEFAULT NULL,
   PRIMARY KEY (`id`),
   INDEX (`category_id`),
-  INDEX (`city_id`)
+  INDEX (`city_id`),
+  INDEX (`customer_id`),
+  INDEX (`worker_id`)
 );
 
 
@@ -29,10 +33,11 @@ CREATE TABLE `user` (
 	`email` TEXT NOT NULL,
 	`password_hash` text NOT NULL,
 	`register_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-	`city_id` INT UNSIGNED NOT NULL,
+	`city_id` INT UNSIGNED DEFAULT NULL,
 	`avatar` TEXT DEFAULT NULL,
 	`role` enum('customer','worker') NOT NULL DEFAULT 'customer',
-	`birthday` DATETIME NOT NULL,
+	`birthday` DATETIME DEFAULT NULL,
+    `about` TEXT DEFAULT NULL,
 	`phone` TEXT DEFAULT NULL,
 	`skype` TEXT DEFAULT NULL,
 	`telegram` TEXT DEFAULT NULL,
@@ -61,8 +66,8 @@ CREATE TABLE `response` (
 CREATE TABLE `city` (
 	`id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
 	`name` TEXT NOT NULL,
-	`latitude` DECIMAL(8,6) DEFAULT NULL,
-	`longitude` DECIMAL(8,6) DEFAULT NULL,
+	`latitude` DECIMAL(10,7) DEFAULT NULL,
+	`longitude` DECIMAL(10,7) DEFAULT NULL,
 	PRIMARY KEY (`id`)
 );
 
@@ -123,6 +128,10 @@ CREATE TABLE `portfolio` (
 ALTER TABLE `task` ADD CONSTRAINT `task_fk0` FOREIGN KEY (`category_id`) REFERENCES `category`(`id`);
 
 ALTER TABLE `task` ADD CONSTRAINT `task_fk1` FOREIGN KEY (`city_id`) REFERENCES `city`(`id`);
+
+ALTER TABLE `task` ADD CONSTRAINT `task_fk2` FOREIGN KEY (`customer_id`) REFERENCES `user`(`id`);
+
+ALTER TABLE `task` ADD CONSTRAINT `task_fk3` FOREIGN KEY (`worker_id`) REFERENCES `user`(`id`);
 
 ALTER TABLE `user` ADD CONSTRAINT `user_fk0` FOREIGN KEY (`city_id`) REFERENCES `city`(`id`);
 
