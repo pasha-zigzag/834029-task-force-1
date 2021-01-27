@@ -2,7 +2,7 @@
 
 namespace taskforce\models;
 
-use taskforce\exceptions\NotValidStatusException;
+use taskforce\models\exceptions\NotValidStatusException;
 use taskforce\models\actions\AbstractAction;
 use taskforce\models\actions\ApproveAction;
 use taskforce\models\actions\CancelAction;
