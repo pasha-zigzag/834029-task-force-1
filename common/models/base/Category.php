@@ -1,6 +1,6 @@
 <?php
 
-namespace app\models;
+namespace app\common\models\base;
 
 use Yii;
 
@@ -55,7 +55,7 @@ class Category extends \yii\db\ActiveRecord
      */
     public function getTasks()
     {
-        return $this->hasMany(Task::class, ['category_id' => 'id']);
+        return $this->hasMany(Task::className(), ['category_id' => 'id']);
     }
 
     /**
@@ -65,7 +65,7 @@ class Category extends \yii\db\ActiveRecord
      */
     public function getUserCategories()
     {
-        return $this->hasMany(UserCategory::class, ['category_id' => 'id']);
+        return $this->hasMany(UserCategory::className(), ['category_id' => 'id']);
     }
 
     /**
@@ -75,6 +75,6 @@ class Category extends \yii\db\ActiveRecord
      */
     public function getUsers()
     {
-        return $this->hasMany(User::class, ['id' => 'user_id'])->viaTable('user_category', ['category_id' => 'id']);
+        return $this->hasMany(User::className(), ['id' => 'user_id'])->viaTable('user_category', ['category_id' => 'id']);
     }
 }

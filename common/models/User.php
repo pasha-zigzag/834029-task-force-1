@@ -1,50 +1,53 @@
 <?php
-namespace common\models;
+
+namespace app\common\models;
 
 use Yii;
-use yii\base\NotSupportedException;
-use yii\behaviors\TimestampBehavior;
-use yii\db\ActiveRecord;
-use yii\web\IdentityInterface;
 
 /**
- * User model
+ * This is the model class for table "user".
  *
- * @property integer $id
- * @property string $username
- * @property string $password_hash
- * @property string $password_reset_token
- * @property string $verification_token
+ * @property int $id
+ * @property string $name
  * @property string $email
- * @property string $auth_key
- * @property integer $status
- * @property integer $created_at
- * @property integer $updated_at
- * @property string $password write-only password
+ * @property string $password_hash
+ * @property string $register_at
+ * @property int|null $city_id
+ * @property string|null $avatar
+ * @property string $role
+ * @property string|null $birthday
+ * @property string|null $about
+ * @property string|null $phone
+ * @property string|null $skype
+ * @property string|null $telegram
+ * @property int $is_show_profile
+ * @property int $is_show_contacts
+ * @property int $is_notify_about_message
+ * @property int $is_notify_about_action
+ * @property int $is_notify_about_review
+ *
+ * @property Favorite[] $favorites
+ * @property User[] $workers
+ * @property User[] $customers
+ * @property Message[] $messages
+ * @property Portfolio[] $portfolios
+ * @property Response[] $responses
+ * @property Review[] $customerReviews
+ * @property Review[] $workerReviews
+ * @property Task[] $customerTasks
+ * @property Task[] $workerTasks
+ * @property City $city
+ * @property UserCategory[] $userCategories
+ * @property Category[] $categories
  */
-class User extends ActiveRecord implements IdentityInterface
+class User extends \yii\db\ActiveRecord
 {
-    const STATUS_DELETED = 0;
-    const STATUS_INACTIVE = 9;
-    const STATUS_ACTIVE = 10;
-
-
     /**
      * {@inheritdoc}
      */
     public static function tableName()
     {
-        return '{{%user}}';
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function behaviors()
-    {
-        return [
-            TimestampBehavior::className(),
-        ];
+        return 'user';
     }
 
     /**
@@ -53,160 +56,168 @@ class User extends ActiveRecord implements IdentityInterface
     public function rules()
     {
         return [
-            ['status', 'default', 'value' => self::STATUS_INACTIVE],
-            ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_INACTIVE, self::STATUS_DELETED]],
+            [['name', 'email', 'password_hash'], 'required'],
+            [['name', 'email', 'password_hash', 'avatar', 'role', 'about', 'phone', 'skype', 'telegram'], 'string'],
+            [['register_at', 'birthday'], 'safe'],
+            [['city_id', 'is_show_profile', 'is_show_contacts', 'is_notify_about_message', 'is_notify_about_action', 'is_notify_about_review'], 'integer'],
+            [['city_id'], 'exist', 'skipOnError' => true, 'targetClass' => City::class, 'targetAttribute' => ['city_id' => 'id']],
         ];
     }
 
     /**
      * {@inheritdoc}
      */
-    public static function findIdentity($id)
+    public function attributeLabels()
     {
-        return static::findOne(['id' => $id, 'status' => self::STATUS_ACTIVE]);
+        return [
+            'id' => 'ID',
+            'name' => 'Name',
+            'email' => 'Email',
+            'password_hash' => 'Password Hash',
+            'register_at' => 'Register At',
+            'city_id' => 'City ID',
+            'avatar' => 'Avatar',
+            'role' => 'Role',
+            'birthday' => 'Birthday',
+            'about' => 'About',
+            'phone' => 'Phone',
+            'skype' => 'Skype',
+            'telegram' => 'Telegram',
+            'is_show_profile' => 'Is Show Profile',
+            'is_show_contacts' => 'Is Show Contacts',
+            'is_notify_about_message' => 'Is Notify About Message',
+            'is_notify_about_action' => 'Is Notify About Action',
+            'is_notify_about_review' => 'Is Notify About Review',
+        ];
     }
 
     /**
-     * {@inheritdoc}
-     */
-    public static function findIdentityByAccessToken($token, $type = null)
-    {
-        throw new NotSupportedException('"findIdentityByAccessToken" is not implemented.');
-    }
-
-    /**
-     * Finds user by username
+     * Gets query for [[Favorites]].
      *
-     * @param string $username
-     * @return static|null
+     * @return \yii\db\ActiveQuery
      */
-    public static function findByUsername($username)
+    public function getFavorites()
     {
-        return static::findOne(['username' => $username, 'status' => self::STATUS_ACTIVE]);
+        return $this->hasMany(Favorite::class, ['customer_id' => 'id']);
     }
 
     /**
-     * Finds user by password reset token
+     * Gets query for [[Workers]].
      *
-     * @param string $token password reset token
-     * @return static|null
+     * @return \yii\db\ActiveQuery
      */
-    public static function findByPasswordResetToken($token)
+    public function getWorkers()
     {
-        if (!static::isPasswordResetTokenValid($token)) {
-            return null;
-        }
-
-        return static::findOne([
-            'password_reset_token' => $token,
-            'status' => self::STATUS_ACTIVE,
-        ]);
+        return $this->hasMany(User::class, ['id' => 'worker_id'])->viaTable('favorite', ['customer_id' => 'id']);
     }
 
     /**
-     * Finds user by verification email token
+     * Gets query for [[Customers]].
      *
-     * @param string $token verify email token
-     * @return static|null
+     * @return \yii\db\ActiveQuery
      */
-    public static function findByVerificationToken($token) {
-        return static::findOne([
-            'verification_token' => $token,
-            'status' => self::STATUS_INACTIVE
-        ]);
+    public function getCustomers()
+    {
+        return $this->hasMany(User::class, ['id' => 'customer_id'])->viaTable('favorite', ['worker_id' => 'id']);
     }
 
     /**
-     * Finds out if password reset token is valid
+     * Gets query for [[Messages]].
      *
-     * @param string $token password reset token
-     * @return bool
+     * @return \yii\db\ActiveQuery
      */
-    public static function isPasswordResetTokenValid($token)
+    public function getMessages()
     {
-        if (empty($token)) {
-            return false;
-        }
-
-        $timestamp = (int) substr($token, strrpos($token, '_') + 1);
-        $expire = Yii::$app->params['user.passwordResetTokenExpire'];
-        return $timestamp + $expire >= time();
+        return $this->hasMany(Message::class, ['user_id' => 'id']);
     }
 
     /**
-     * {@inheritdoc}
-     */
-    public function getId()
-    {
-        return $this->getPrimaryKey();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getAuthKey()
-    {
-        return $this->auth_key;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function validateAuthKey($authKey)
-    {
-        return $this->getAuthKey() === $authKey;
-    }
-
-    /**
-     * Validates password
+     * Gets query for [[Portfolios]].
      *
-     * @param string $password password to validate
-     * @return bool if password provided is valid for current user
+     * @return \yii\db\ActiveQuery
      */
-    public function validatePassword($password)
+    public function getPortfolios()
     {
-        return Yii::$app->security->validatePassword($password, $this->password_hash);
+        return $this->hasMany(Portfolio::class, ['user_id' => 'id']);
     }
 
     /**
-     * Generates password hash from password and sets it to the model
+     * Gets query for [[Responses]].
      *
-     * @param string $password
+     * @return \yii\db\ActiveQuery
      */
-    public function setPassword($password)
+    public function getResponses()
     {
-        $this->password_hash = Yii::$app->security->generatePasswordHash($password);
+        return $this->hasMany(Response::class, ['worker_id' => 'id']);
     }
 
     /**
-     * Generates "remember me" authentication key
+     * Gets query for [[CustomerReviews]].
+     *
+     * @return \yii\db\ActiveQuery
      */
-    public function generateAuthKey()
+    public function getCustomerReviews()
     {
-        $this->auth_key = Yii::$app->security->generateRandomString();
+        return $this->hasMany(Review::class, ['customer_id' => 'id']);
     }
 
     /**
-     * Generates new password reset token
+     * Gets query for [[WorkerReviews]].
+     *
+     * @return \yii\db\ActiveQuery
      */
-    public function generatePasswordResetToken()
+    public function getWorkerReviews()
     {
-        $this->password_reset_token = Yii::$app->security->generateRandomString() . '_' . time();
+        return $this->hasMany(Review::class, ['worker_id' => 'id']);
     }
 
     /**
-     * Generates new token for email verification
+     * Gets query for [[CustomerTasks]].
+     *
+     * @return \yii\db\ActiveQuery
      */
-    public function generateEmailVerificationToken()
+    public function getCustomerTasks()
     {
-        $this->verification_token = Yii::$app->security->generateRandomString() . '_' . time();
+        return $this->hasMany(Task::class, ['customer_id' => 'id']);
     }
 
     /**
-     * Removes password reset token
+     * Gets query for [[WorkerTasks]].
+     *
+     * @return \yii\db\ActiveQuery
      */
-    public function removePasswordResetToken()
+    public function getWorkerTasks()
     {
-        $this->password_reset_token = null;
+        return $this->hasMany(Task::class, ['worker_id' => 'id']);
+    }
+
+    /**
+     * Gets query for [[City]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getCity()
+    {
+        return $this->hasOne(City::class, ['id' => 'city_id']);
+    }
+
+    /**
+     * Gets query for [[UserCategories]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getUserCategories()
+    {
+        return $this->hasMany(UserCategory::class, ['user_id' => 'id']);
+    }
+
+    /**
+     * Gets query for [[Categories]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getCategories()
+    {
+        return $this->hasMany(Category::class, ['id' => 'category_id'])->viaTable('user_category', ['user_id' => 'id']);
     }
 }

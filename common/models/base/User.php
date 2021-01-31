@@ -1,6 +1,6 @@
 <?php
 
-namespace app\models;
+namespace app\common\models\base;
 
 use Yii;
 
@@ -61,7 +61,7 @@ class User extends \yii\db\ActiveRecord
             [['name', 'email', 'password_hash', 'avatar', 'role', 'about', 'phone', 'skype', 'telegram'], 'string'],
             [['register_at', 'birthday'], 'safe'],
             [['city_id', 'is_show_profile', 'is_show_contacts', 'is_notify_about_message', 'is_notify_about_action', 'is_notify_about_review'], 'integer'],
-            [['city_id'], 'exist', 'skipOnError' => true, 'targetClass' => City::class, 'targetAttribute' => ['city_id' => 'id']],
+            [['city_id'], 'exist', 'skipOnError' => true, 'targetClass' => City::className(), 'targetAttribute' => ['city_id' => 'id']],
         ];
     }
 
@@ -99,7 +99,7 @@ class User extends \yii\db\ActiveRecord
      */
     public function getFavorites()
     {
-        return $this->hasMany(Favorite::class, ['customer_id' => 'id']);
+        return $this->hasMany(Favorite::className(), ['customer_id' => 'id']);
     }
 
     /**
@@ -109,7 +109,7 @@ class User extends \yii\db\ActiveRecord
      */
     public function getFavorites0()
     {
-        return $this->hasMany(Favorite::class, ['worker_id' => 'id']);
+        return $this->hasMany(Favorite::className(), ['worker_id' => 'id']);
     }
 
     /**
@@ -119,7 +119,7 @@ class User extends \yii\db\ActiveRecord
      */
     public function getWorkers()
     {
-        return $this->hasMany(User::class, ['id' => 'worker_id'])->viaTable('favorite', ['customer_id' => 'id']);
+        return $this->hasMany(User::className(), ['id' => 'worker_id'])->viaTable('favorite', ['customer_id' => 'id']);
     }
 
     /**
@@ -129,7 +129,7 @@ class User extends \yii\db\ActiveRecord
      */
     public function getCustomers()
     {
-        return $this->hasMany(User::class, ['id' => 'customer_id'])->viaTable('favorite', ['worker_id' => 'id']);
+        return $this->hasMany(User::className(), ['id' => 'customer_id'])->viaTable('favorite', ['worker_id' => 'id']);
     }
 
     /**
@@ -139,7 +139,7 @@ class User extends \yii\db\ActiveRecord
      */
     public function getMessages()
     {
-        return $this->hasMany(Message::class, ['user_id' => 'id']);
+        return $this->hasMany(Message::className(), ['user_id' => 'id']);
     }
 
     /**
@@ -149,7 +149,7 @@ class User extends \yii\db\ActiveRecord
      */
     public function getPortfolios()
     {
-        return $this->hasMany(Portfolio::class, ['user_id' => 'id']);
+        return $this->hasMany(Portfolio::className(), ['user_id' => 'id']);
     }
 
     /**
@@ -159,7 +159,7 @@ class User extends \yii\db\ActiveRecord
      */
     public function getResponses()
     {
-        return $this->hasMany(Response::class, ['worker_id' => 'id']);
+        return $this->hasMany(Response::className(), ['worker_id' => 'id']);
     }
 
     /**
@@ -167,9 +167,9 @@ class User extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getCustomerReviews()
+    public function getReviews()
     {
-        return $this->hasMany(Review::class, ['customer_id' => 'id']);
+        return $this->hasMany(Review::className(), ['customer_id' => 'id']);
     }
 
     /**
@@ -177,9 +177,9 @@ class User extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getWorkerReviews()
+    public function getReviews0()
     {
-        return $this->hasMany(Review::class, ['worker_id' => 'id']);
+        return $this->hasMany(Review::className(), ['worker_id' => 'id']);
     }
 
     /**
@@ -187,9 +187,9 @@ class User extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getCustomerTasks()
+    public function getTasks()
     {
-        return $this->hasMany(Task::class, ['customer_id' => 'id']);
+        return $this->hasMany(Task::className(), ['customer_id' => 'id']);
     }
 
     /**
@@ -197,9 +197,9 @@ class User extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getWorkerTasks()
+    public function getTasks0()
     {
-        return $this->hasMany(Task::class, ['worker_id' => 'id']);
+        return $this->hasMany(Task::className(), ['worker_id' => 'id']);
     }
 
     /**
@@ -209,7 +209,7 @@ class User extends \yii\db\ActiveRecord
      */
     public function getCity()
     {
-        return $this->hasOne(City::class, ['id' => 'city_id']);
+        return $this->hasOne(City::className(), ['id' => 'city_id']);
     }
 
     /**
@@ -219,7 +219,7 @@ class User extends \yii\db\ActiveRecord
      */
     public function getUserCategories()
     {
-        return $this->hasMany(UserCategory::class, ['user_id' => 'id']);
+        return $this->hasMany(UserCategory::className(), ['user_id' => 'id']);
     }
 
     /**
@@ -229,6 +229,6 @@ class User extends \yii\db\ActiveRecord
      */
     public function getCategories()
     {
-        return $this->hasMany(Category::class, ['id' => 'category_id'])->viaTable('user_category', ['user_id' => 'id']);
+        return $this->hasMany(Category::className(), ['id' => 'category_id'])->viaTable('user_category', ['user_id' => 'id']);
     }
 }

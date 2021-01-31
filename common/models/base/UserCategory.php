@@ -1,6 +1,6 @@
 <?php
 
-namespace app\models;
+namespace app\common\models\base;
 
 use Yii;
 
@@ -32,8 +32,8 @@ class UserCategory extends \yii\db\ActiveRecord
             [['user_id', 'category_id'], 'required'],
             [['user_id', 'category_id'], 'integer'],
             [['user_id', 'category_id'], 'unique', 'targetAttribute' => ['user_id', 'category_id']],
-            [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['user_id' => 'id']],
-            [['category_id'], 'exist', 'skipOnError' => true, 'targetClass' => Category::class, 'targetAttribute' => ['category_id' => 'id']],
+            [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
+            [['category_id'], 'exist', 'skipOnError' => true, 'targetClass' => Category::className(), 'targetAttribute' => ['category_id' => 'id']],
         ];
     }
 
@@ -55,7 +55,7 @@ class UserCategory extends \yii\db\ActiveRecord
      */
     public function getUser()
     {
-        return $this->hasOne(User::class, ['id' => 'user_id']);
+        return $this->hasOne(User::className(), ['id' => 'user_id']);
     }
 
     /**
@@ -65,6 +65,6 @@ class UserCategory extends \yii\db\ActiveRecord
      */
     public function getCategory()
     {
-        return $this->hasOne(Category::class, ['id' => 'category_id']);
+        return $this->hasOne(Category::className(), ['id' => 'category_id']);
     }
 }

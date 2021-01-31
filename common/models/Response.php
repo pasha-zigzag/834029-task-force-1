@@ -1,32 +1,30 @@
 <?php
 
-namespace app\models;
+namespace app\common\models;
 
 use Yii;
 
 /**
- * This is the model class for table "review".
+ * This is the model class for table "response".
  *
  * @property int $id
  * @property int $task_id
- * @property int $customer_id
  * @property int $worker_id
  * @property string $comment
- * @property int|null $rating
+ * @property int $price
  * @property string $created_at
  *
  * @property Task $task
- * @property User $customer
  * @property User $worker
  */
-class Review extends \yii\db\ActiveRecord
+class Response extends \yii\db\ActiveRecord
 {
     /**
      * {@inheritdoc}
      */
     public static function tableName()
     {
-        return 'review';
+        return 'response';
     }
 
     /**
@@ -35,12 +33,11 @@ class Review extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['task_id', 'customer_id', 'worker_id', 'comment'], 'required'],
-            [['task_id', 'customer_id', 'worker_id', 'rating'], 'integer'],
+            [['task_id', 'worker_id', 'comment', 'price'], 'required'],
+            [['task_id', 'worker_id', 'price'], 'integer'],
             [['comment'], 'string'],
             [['created_at'], 'safe'],
             [['task_id'], 'exist', 'skipOnError' => true, 'targetClass' => Task::class, 'targetAttribute' => ['task_id' => 'id']],
-            [['customer_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['customer_id' => 'id']],
             [['worker_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['worker_id' => 'id']],
         ];
     }
@@ -53,10 +50,9 @@ class Review extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'task_id' => 'Task ID',
-            'customer_id' => 'Customer ID',
             'worker_id' => 'Worker ID',
             'comment' => 'Comment',
-            'rating' => 'Rating',
+            'price' => 'Price',
             'created_at' => 'Created At',
         ];
     }
@@ -69,16 +65,6 @@ class Review extends \yii\db\ActiveRecord
     public function getTask()
     {
         return $this->hasOne(Task::class, ['id' => 'task_id']);
-    }
-
-    /**
-     * Gets query for [[Customer]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
-    public function getCustomer()
-    {
-        return $this->hasOne(User::class, ['id' => 'customer_id']);
     }
 
     /**

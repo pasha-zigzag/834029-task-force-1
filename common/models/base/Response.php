@@ -1,6 +1,6 @@
 <?php
 
-namespace app\models;
+namespace app\common\models\base;
 
 use Yii;
 
@@ -37,8 +37,8 @@ class Response extends \yii\db\ActiveRecord
             [['task_id', 'worker_id', 'price'], 'integer'],
             [['comment'], 'string'],
             [['created_at'], 'safe'],
-            [['task_id'], 'exist', 'skipOnError' => true, 'targetClass' => Task::class, 'targetAttribute' => ['task_id' => 'id']],
-            [['worker_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['worker_id' => 'id']],
+            [['task_id'], 'exist', 'skipOnError' => true, 'targetClass' => Task::className(), 'targetAttribute' => ['task_id' => 'id']],
+            [['worker_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['worker_id' => 'id']],
         ];
     }
 
@@ -64,7 +64,7 @@ class Response extends \yii\db\ActiveRecord
      */
     public function getTask()
     {
-        return $this->hasOne(Task::class, ['id' => 'task_id']);
+        return $this->hasOne(Task::className(), ['id' => 'task_id']);
     }
 
     /**
@@ -74,6 +74,6 @@ class Response extends \yii\db\ActiveRecord
      */
     public function getWorker()
     {
-        return $this->hasOne(User::class, ['id' => 'worker_id']);
+        return $this->hasOne(User::className(), ['id' => 'worker_id']);
     }
 }
