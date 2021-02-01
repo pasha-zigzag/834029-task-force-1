@@ -4,7 +4,7 @@ namespace app\common\models;
 
 use Yii;
 
-class User extends \yii\db\ActiveRecord
+class User extends \app\common\models\base\User
 {
 
     public function getFavoriteUsers()
