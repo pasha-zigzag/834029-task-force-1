@@ -6,7 +6,6 @@ use Yii;
 
 class User extends \app\common\models\base\User
 {
-
     public function getFavoriteUsers()
     {
         return $this->hasMany(Favorite::class, ['customer_id' => 'id']);
