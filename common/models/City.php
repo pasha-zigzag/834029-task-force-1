@@ -1,10 +1,10 @@
 <?php
 
-namespace app\common\models;
+namespace common\models;
 
 use Yii;
 
-class City extends \app\common\models\base\City
+class City extends base\City
 {
 
 }

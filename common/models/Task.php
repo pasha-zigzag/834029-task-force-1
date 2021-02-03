@@ -1,10 +1,10 @@
 <?php
 
-namespace app\common\models;
+namespace common\models;
 
 use Yii;
 
-class Task extends \app\common\models\base\Task
+class Task extends base\Task
 {
 
 }

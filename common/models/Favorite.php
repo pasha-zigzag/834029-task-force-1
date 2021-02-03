@@ -1,10 +1,10 @@
 <?php
 
-namespace app\common\models;
+namespace common\models;
 
 use Yii;
 
-class Favorite extends \app\common\models\base\Favorite
+class Favorite extends base\Favorite
 {
 
 }

@@ -1,10 +1,10 @@
 <?php
 
-namespace app\common\models;
+namespace common\models;
 
 use Yii;
 
-class Message extends \app\common\models\base\Message
+class Message extends base\Message
 {
 
 }

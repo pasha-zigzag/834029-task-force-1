@@ -1,10 +1,10 @@
 <?php
 
-namespace app\common\models;
+namespace common\models;
 
 use Yii;
 
-class Response extends \app\common\models\base\Response
+class Response extends base\Response
 {
 
 }
