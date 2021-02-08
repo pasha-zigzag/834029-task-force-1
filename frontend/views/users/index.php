@@ -23,8 +23,21 @@
             <div class="feedback-card__top">
                 <div class="user__search-icon">
                     <a href="#"><img src="./img/man-glasses.jpg" width="65" height="65"></a>
-                    <span><?=count($user->workerTasks)?> заданий</span>
-                    <span><?=count($user->workerReviews)?> отзывов</span>
+                    <span>
+                        <?php //var_dump(count($user->workerTasks)); ?>
+                        <?= Yii::t(
+                            'app',
+                            '{n, plural, =0{0 заданий} one{# задание} few{# задания} many{# заданий} other{# зданий}}',
+                            ['n' => count($user->workerTasks)]
+                        ); ?>
+                    </span>
+                    <span>
+                        <?= Yii::t(
+                            'app',
+                            '{n, plural, =0{0 отзывов} one{# отзыв} few{# отзыва} many{# отзывов}}',
+                            ['n' => count($user->workerReviews)]
+                        ); ?>
+                    </span>
                 </div>
                 <div class="feedback-card__top--name user__search-card">
                     <p class="link-name">

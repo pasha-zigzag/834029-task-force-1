@@ -13,4 +13,5 @@ return [
             'locale' => 'ru-RU',
         ],
     ],
+    'language' => 'ru-RU',
 ];
