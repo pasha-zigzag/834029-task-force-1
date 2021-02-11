@@ -5,13 +5,12 @@ namespace frontend\controllers;
 
 
 use common\models\User;
-use yii\web\Controller;
 
-class UsersController extends Controller
+class UsersController extends BaseController
 {
     public function actionIndex()
     {
-        $users = User::find()->where(['role' => 'worker'])->all();
+        $users = User::find()->where(['role' => 'worker'])->with('workerReviews', 'workerTasks')->all();
         return $this->render('index', compact('users'));
     }
 }

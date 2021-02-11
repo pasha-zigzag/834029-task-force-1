@@ -46,6 +46,7 @@ CREATE TABLE `user` (
     `is_notify_about_message` tinyint NOT NULL DEFAULT '0',
     `is_notify_about_action` tinyint NOT NULL DEFAULT '0',
     `is_notify_about_review` tinyint NOT NULL DEFAULT '0',
+	`last_active_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	PRIMARY KEY (`id`),
 	INDEX (`city_id`),
 	UNIQUE (`email`(512))

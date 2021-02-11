@@ -5,9 +5,8 @@ namespace frontend\controllers;
 
 
 use common\models\Task;
-use yii\web\Controller;
 
-class TasksController extends Controller
+class TasksController extends BaseController
 {
     public function actionIndex()
     {

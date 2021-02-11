@@ -2,6 +2,7 @@
 
 namespace common\models;
 
+use DateTime;
 use Yii;
 use yii\helpers\ArrayHelper;
 
@@ -36,8 +37,17 @@ class User extends base\User
     {
         $rating_array = ArrayHelper::map($this->workerReviews, 'id', 'rating');
         if(count($rating_array) === 0) {
-            return 0;
+            return number_format(0, 2);
         }
-        return round(array_sum($rating_array) / count($rating_array), 2);
+        return number_format(round(array_sum($rating_array) / count($rating_array), 2), 2);
+    }
+
+    public function getLastActivity()
+    {
+        $minutes = (time() - strtotime($this->last_active_time)) / 60;
+        if($minutes <= 3) {
+            return 'Сейчас на сайте';
+        }
+        return 'Был на сайте ' . Yii::$app->formatter->asRelativeTime($this->last_active_time);
     }
 }

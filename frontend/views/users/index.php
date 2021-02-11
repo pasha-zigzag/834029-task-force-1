@@ -24,17 +24,16 @@
                 <div class="user__search-icon">
                     <a href="#"><img src="./img/man-glasses.jpg" width="65" height="65"></a>
                     <span>
-                        <?php //var_dump(count($user->workerTasks)); ?>
                         <?= Yii::t(
                             'app',
-                            '{n, plural, =0{0 заданий} one{# задание} few{# задания} many{# заданий} other{# зданий}}',
+                            '{n, plural, =0{0 заданий} one{# задание} few{# задания} many{# заданий} other{# заданий}}',
                             ['n' => count($user->workerTasks)]
                         ); ?>
                     </span>
                     <span>
                         <?= Yii::t(
                             'app',
-                            '{n, plural, =0{0 отзывов} one{# отзыв} few{# отзыва} many{# отзывов}}',
+                            '{n, plural, =0{0 отзывов} one{# отзыв} few{# отзыва} many{# отзывов} other{# отзывов}}',
                             ['n' => count($user->workerReviews)]
                         ); ?>
                     </span>
@@ -53,7 +52,9 @@
                         </p>
                     <?php endif; ?>
                 </div>
-                <span class="new-task__time">Был на сайте 25 минут назад</span>
+                <span class="new-task__time">
+                    <?=$user->lastActivity?>
+                </span>
             </div>
             <div class="link-specialization user__search-link--bottom">
                 <?php if(!empty($user->categories)) : ?>
