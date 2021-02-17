@@ -10,7 +10,7 @@ class UsersController extends BaseController
 {
     public function actionIndex()
     {
-        $users = User::find()->where(['role' => 'worker'])->with('workerReviews', 'workerTasks')->all();
+        $users = User::find()->where(['role' => User::WORKER_ROLE])->with('workerReviews', 'workerTasks')->all();
         return $this->render('index', compact('users'));
     }
 }

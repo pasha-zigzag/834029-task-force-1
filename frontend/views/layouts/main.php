@@ -82,16 +82,16 @@ AppAsset::register($this);
             <div class="header__nav">
                 <ul class="header-nav__list site-list">
                     <li class="site-list__item site-list__item--active">
-                        <a href="#">Задания</a>
+                        <?=Html::a('Задания', ['tasks/index'])?>
                     </li>
                     <li class="site-list__item">
-                        <a href="users.html">Исполнители</a>
+                        <?=Html::a('Исполнители', ['users/index'])?>
                     </li>
                     <li class="site-list__item">
-                        <a href="create.html">Создать задание</a>
+                        <?=Html::a('Создать задание', ['tasks/create'])?>
                     </li>
                     <li class="site-list__item">
-                        <a href="account.html">Мой профиль</a>
+                        <?=Html::a('Мой профиль', ['profile/index'])?>
                     </li>
                 </ul>
             </div>
@@ -167,22 +167,22 @@ AppAsset::register($this);
             <div class="page-footer__links">
                 <ul class="links__list">
                     <li class="links__item">
-                        <a href="browse.html">Задания</a>
+                        <?=Html::a('Задания', ['tasks/index'])?>
                     </li>
                     <li class="links__item">
-                        <a href="account.html">Мой профиль</a>
+                        <?=Html::a('Мой профиль', ['profile/index'])?>
                     </li>
                     <li class="links__item">
-                        <a href="users.html">Исполнители</a>
+                        <?=Html::a('Исполнители', ['users/index'])?>
                     </li>
                     <li class="links__item">
-                        <a href="signup.html">Регистрация</a>
+                        <?=Html::a('Регистрация', ['register'])?>
                     </li>
                     <li class="links__item">
-                        <a href="create.html">Создать задание</a>
+                        <?=Html::a('Создать задание', ['tasks/create'])?>
                     </li>
                     <li class="links__item">
-                        <a href="">Справка</a>
+                        <?=Html::a('Справка', ['faq'])?>
                     </li>
                 </ul>
             </div>

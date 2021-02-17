@@ -1,6 +1,9 @@
 <?php
 /* @var $this yii\web\View */
 /* @var $users common\models\User */
+
+use frontend\components\RatingWidget;
+
 ?>
 
 <section class="user__search">
@@ -21,6 +24,8 @@
     </div>
 
     <?php foreach($users as $user) : ?>
+        <?php $workerRating = $user->workerRating; ?>
+
         <div class="content-view__feedback-card user__search-wrapper">
             <div class="feedback-card__top">
                 <div class="user__search-icon">
@@ -46,8 +51,9 @@
                             <?=$user->name?>
                         </a>
                     </p>
-                    <?=$user->ratingStarsHtml?>
-                    <b><?=$user->workerRating?></b>
+
+                    <?= RatingWidget::widget(['rating' => $workerRating]) ?>
+                    <b><?=$workerRating?></b>
                     <?php if($user->about) : ?>
                         <p class="user__search-content">
                             <?=$user->about?>

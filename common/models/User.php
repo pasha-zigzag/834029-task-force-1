@@ -5,57 +5,52 @@ namespace common\models;
 use DateTime;
 use Yii;
 use yii\helpers\ArrayHelper;
+use yii\db\ActiveQuery;
 
 class User extends base\User
 {
-    public function getFavoriteUsers()
+    public const WORKER_ROLE = 'worker';
+    public const CUSTOMER_ROLE = 'customer';
+
+    public function getFavoriteUsers() : ActiveQuery
     {
         return $this->hasMany(Favorite::class, ['customer_id' => 'id']);
     }
 
-    public function getCustomerReviews()
+    public function getCustomerReviews() : ActiveQuery
     {
         return $this->hasMany(Review::class, ['customer_id' => 'id']);
     }
 
-    public function getWorkerReviews()
+    public function getWorkerReviews() : ActiveQuery
     {
         return $this->hasMany(Review::class, ['worker_id' => 'id']);
     }
 
-    public function getCustomerTasks()
+    public function getCustomerTasks() : ActiveQuery
     {
         return $this->hasMany(Task::class, ['customer_id' => 'id']);
     }
 
-    public function getWorkerTasks()
+    public function getWorkerTasks() : ActiveQuery
     {
         return $this->hasMany(Task::class, ['worker_id' => 'id']);
     }
 
-    public function getWorkerRating()
+    public function getWorkerRating() : string
     {
         $rating_array = ArrayHelper::map($this->workerReviews, 'id', 'rating');
-        if(count($rating_array) === 0) {
+        $review_count = count($rating_array);
+
+        if($review_count === 0) {
             return number_format(0, 2);
         }
-        $rating = round(array_sum($rating_array) / count($rating_array), 2);
+
+        $rating = round(array_sum($rating_array) / $review_count, 2);
         return number_format($rating, 2);
     }
 
-    public function getRatingStarsHtml()
-    {
-        $rating_array = ArrayHelper::map($this->workerReviews, 'id', 'rating');
-        if(count($rating_array) === 0) {
-            return str_repeat('<span class="star-disabled"></span>', 5);
-        }
-        $stars_number = round(array_sum($rating_array) / count($rating_array));
-        $stars_html = str_repeat('<span></span>', $stars_number);
-        $empty_stars_html = str_repeat('<span class="star-disabled"></span>', 5 - $stars_number);
-        return $stars_html . $empty_stars_html;
-    }
-
-    public function getLastActivity()
+    public function getLastActivity() : string
     {
         $minutes = (time() - strtotime($this->last_active_time)) / 60;
         if($minutes <= 3) {
