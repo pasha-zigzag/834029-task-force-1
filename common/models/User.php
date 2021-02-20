@@ -11,6 +11,7 @@ class User extends base\User
 {
     public const WORKER_ROLE = 'worker';
     public const CUSTOMER_ROLE = 'customer';
+    public const NOW_ONLINE_MINUTES = 30;
 
     public function getFavoriteUsers() : ActiveQuery
     {
@@ -43,18 +44,17 @@ class User extends base\User
         $review_count = count($rating_array);
 
         if($review_count === 0) {
-            return number_format(0, 2);
+            return 0;
         }
 
-        $rating = round(array_sum($rating_array) / $review_count, 2);
-        return number_format($rating, 2);
+        return array_sum($rating_array) / $review_count;
     }
 
     public function getLastActivity() : string
     {
         $minutes = (time() - strtotime($this->last_active_time)) / 60;
-        if($minutes <= 3) {
-            return 'Сейчас на сайте';
+        if($minutes <= self::NOW_ONLINE_MINUTES) {
+            return 'Сейчас онлайн';
         }
         return 'Был на сайте ' . Yii::$app->formatter->asRelativeTime($this->last_active_time);
     }

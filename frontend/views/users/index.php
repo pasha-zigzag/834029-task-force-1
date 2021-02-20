@@ -24,8 +24,6 @@ use frontend\components\RatingWidget;
     </div>
 
     <?php foreach($users as $user) : ?>
-        <?php $workerRating = $user->workerRating; ?>
-
         <div class="content-view__feedback-card user__search-wrapper">
             <div class="feedback-card__top">
                 <div class="user__search-icon">
@@ -52,8 +50,8 @@ use frontend\components\RatingWidget;
                         </a>
                     </p>
 
-                    <?= RatingWidget::widget(['rating' => $workerRating]) ?>
-                    <b><?=$workerRating?></b>
+                    <?= RatingWidget::widget(['rating' => $user->workerRating]) ?>
+
                     <?php if($user->about) : ?>
                         <p class="user__search-content">
                             <?=$user->about?>
