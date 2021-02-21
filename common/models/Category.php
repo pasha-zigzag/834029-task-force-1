@@ -1,10 +1,10 @@
 <?php
 
-namespace app\common\models;
+namespace common\models;
 
 use Yii;
 
-class Category extends \app\common\models\base\Category
+class Category extends base\Category
 {
 
 }

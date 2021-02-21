@@ -1,10 +1,10 @@
 <?php
 
-namespace app\common\models;
+namespace common\models;
 
 use Yii;
 
-class File extends \app\common\models\base\File
+class File extends base\File
 {
 
 }

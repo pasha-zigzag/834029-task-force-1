@@ -1,6 +1,6 @@
 <?php
 
-namespace app\common\models\base;
+namespace common\models\base;
 
 use Yii;
 
@@ -25,6 +25,7 @@ use Yii;
  * @property int $is_notify_about_message
  * @property int $is_notify_about_action
  * @property int $is_notify_about_review
+ * @property string $last_active_time
  *
  * @property Favorite[] $favorites
  * @property Favorite[] $favorites0
@@ -59,7 +60,7 @@ class User extends \yii\db\ActiveRecord
         return [
             [['name', 'email', 'password_hash'], 'required'],
             [['name', 'email', 'password_hash', 'avatar', 'role', 'about', 'phone', 'skype', 'telegram'], 'string'],
-            [['register_at', 'birthday'], 'safe'],
+            [['register_at', 'birthday', 'last_active_time'], 'safe'],
             [['city_id', 'is_show_profile', 'is_show_contacts', 'is_notify_about_message', 'is_notify_about_action', 'is_notify_about_review'], 'integer'],
             [['city_id'], 'exist', 'skipOnError' => true, 'targetClass' => City::className(), 'targetAttribute' => ['city_id' => 'id']],
         ];
@@ -89,6 +90,7 @@ class User extends \yii\db\ActiveRecord
             'is_notify_about_message' => 'Is Notify About Message',
             'is_notify_about_action' => 'Is Notify About Action',
             'is_notify_about_review' => 'Is Notify About Review',
+            'last_active_time' => 'Last Active Time',
         ];
     }
 

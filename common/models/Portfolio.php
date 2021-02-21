@@ -1,10 +1,10 @@
 <?php
 
-namespace app\common\models;
+namespace common\models;
 
 use Yii;
 
-class Portfolio extends \app\common\models\base\Portfolio
+class Portfolio extends base\Portfolio
 {
 
 }

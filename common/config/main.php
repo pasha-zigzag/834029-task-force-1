@@ -9,5 +9,9 @@ return [
         'cache' => [
             'class' => 'yii\caching\FileCache',
         ],
+        'formatter' => [
+            'locale' => 'ru-RU',
+        ],
     ],
+    'language' => 'ru-RU',
 ];

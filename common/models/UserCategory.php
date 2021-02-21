@@ -1,10 +1,10 @@
 <?php
 
-namespace app\common\models;
+namespace common\models;
 
 use Yii;
 
-class UserCategory extends \app\common\models\base\UserCategory
+class UserCategory extends base\UserCategory
 {
 
 }
