@@ -12,11 +12,11 @@ use frontend\models\TaskFilterForm;
     <div class="search-task__wrapper">
         <?php
         $form = ActiveForm::begin([
+            'enableClientValidation' => false,
             'options' => [
                 'class' => 'search-task__form'
             ],
             'fieldConfig' => [
-                'template' => "{label}\n{input}\n",
                 'options' => [
                     'tag' => false,
                 ],
@@ -32,7 +32,8 @@ use frontend\models\TaskFilterForm;
                 ],
                 'item' => function ($index, $label, $name, $checked, $value) {
                     $html = Html::input('checkbox', $name, $value, [
-                        'class' => 'visually-hidden checkbox__input'
+                        'class' => 'visually-hidden checkbox__input',
+                        'checked' => $checked
                     ]);
                     $html .= Html::tag('span', $label);
                     $html = Html::tag('label', $html, [

@@ -3,6 +3,7 @@
 /* @var $tasks common\models\Task */
 /* @var $filter frontend\models\TaskFilterForm */
 /* @var $categories array */
+/* @var $filter_data array */
 ?>
 
 <section class="new-task">

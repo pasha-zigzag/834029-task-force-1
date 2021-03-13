@@ -23,6 +23,7 @@ class TaskFilterForm extends Model
     public function rules() : array
     {
         return [
+            ['category','safe'],
             [['title', 'period'], 'string'],
             ['period', 'in', 'range' => self::PERIOD_ARRAY],
             [['has_responses', 'is_remote'], 'boolean'],

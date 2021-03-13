@@ -1,6 +1,7 @@
 <?php
 /* @var $filter frontend\models\UserFilterForm */
 /* @var $categories array */
+/* @var $users array */
 
 use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
@@ -10,6 +11,7 @@ use yii\bootstrap\ActiveForm;
     <div class="search-task__wrapper">
         <?php
         $form = ActiveForm::begin([
+            'enableClientValidation' => false,
             'options' => [
                 'class' => 'search-task__form'
             ],
@@ -31,7 +33,8 @@ use yii\bootstrap\ActiveForm;
                 ],
                 'item' => function ($index, $label, $name, $checked, $value) {
                     $html = Html::input('checkbox', $name, $value, [
-                        'class' => 'visually-hidden checkbox__input'
+                        'class' => 'visually-hidden checkbox__input',
+                        'checked' => $checked
                     ]);
                     $html .= Html::tag('span', $label);
                     $html = Html::tag('label', $html, [

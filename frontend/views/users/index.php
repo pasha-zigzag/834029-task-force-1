@@ -5,7 +5,11 @@
 /* @var $categories array */
 
 use frontend\components\RatingWidget;
+use yii\helpers\Html;
+use frontend\models\UserFilterForm;
 
+$sort = $_GET['sort'] ?? '';
+$active_link_class = 'user__search-item--current';
 ?>
 
 <section class="user__search">
@@ -13,14 +17,14 @@ use frontend\components\RatingWidget;
     <div class="user__search-link">
         <p>Сортировать по:</p>
         <ul class="user__search-list">
-            <li class="user__search-item user__search-item--current">
-                <a href="#" class="link-regular">Рейтингу</a>
+            <li class="user__search-item <?=($sort == 'rating') ? $active_link_class : ''?>">
+                <?=Html::a('Рейтингу', ['/users', 'sort' => UserFilterForm::SORT_RATING], ['class' => 'link-regular'])?>
             </li>
-            <li class="user__search-item">
-                <a href="#" class="link-regular">Числу заказов</a>
+            <li class="user__search-item <?=($sort == 'count') ? $active_link_class : ''?>">
+                <?=Html::a('Числу заказов', ['/users', 'sort' => UserFilterForm::SORT_COUNT], ['class' => 'link-regular'])?>
             </li>
-            <li class="user__search-item">
-                <a href="#" class="link-regular">Популярности</a>
+            <li class="user__search-item <?=($sort == 'popularity') ? $active_link_class : ''?>">
+                <?=Html::a('Популярности', ['/users', 'sort' => UserFilterForm::SORT_POPULARITY], ['class' => 'link-regular'])?>
             </li>
         </ul>
     </div>

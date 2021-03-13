@@ -15,9 +15,14 @@ class UserFilterForm extends Model
     public $has_reviews;
     public $is_favorite;
 
+    const SORT_RATING = 'rating';
+    const SORT_COUNT = 'count';
+    const SORT_POPULARITY = 'popularity';
+
     public function rules() : array
     {
         return [
+            ['category','safe'],
             ['name', 'string'],
             [['is_free', 'is_online', 'has_reviews', 'is_favorite'], 'boolean'],
         ];
