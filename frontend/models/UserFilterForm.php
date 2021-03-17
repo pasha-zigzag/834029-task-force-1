@@ -1,15 +1,12 @@
 <?php
 
-
 namespace frontend\models;
-
 
 use common\models\User;
 use taskforce\models\Task;
 use Yii;
 use yii\base\Model;
 use yii\db\Expression;
-use yii\helpers\VarDumper;
 
 class UserFilterForm extends Model
 {

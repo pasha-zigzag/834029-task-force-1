@@ -1,8 +1,6 @@
 <?php
 
-
 namespace frontend\models;
-
 
 use common\models\Task;
 use taskforce\models\Task as TaskEntity;

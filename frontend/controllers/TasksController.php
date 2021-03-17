@@ -1,15 +1,9 @@
 <?php
 
-
 namespace frontend\controllers;
 
-
 use common\models\Category;
-use common\models\Task;
 use frontend\models\TaskFilterForm;
-use taskforce\models\Task as TaskEntity;
-use Yii;
-use yii\db\Expression;
 use yii\helpers\ArrayHelper;
 
 class TasksController extends BaseController
