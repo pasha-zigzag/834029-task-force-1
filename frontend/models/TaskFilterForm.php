@@ -4,7 +4,6 @@ namespace frontend\models;
 
 use common\models\Task;
 use taskforce\models\Task as TaskEntity;
-use Yii;
 use yii\base\Model;
 use yii\db\Expression;
 
@@ -53,35 +52,33 @@ class TaskFilterForm extends Model
             ->where(['status' => TaskEntity::STATUS_NEW])
             ->with(['category', 'city']);
 
-        if(Yii::$app->request->isPost) {
-            $this->load(Yii::$app->request->post());
+        if(!empty($this->category)) {
+            $tasks->andWhere(['in', 'category_id', $this->category]);
+        }
 
-            if(!empty($this->category)) {
-                $tasks->andWhere(['in', 'category_id', $this->category]);
-            }
-            if($this->has_responses) {
-                $tasks->join('LEFT JOIN', 'response', 'task.id = response.task_id')
-                    ->andWhere(['response.task_id' => null]);
-            }
-            if($this->is_remote) {
-                $tasks->andWhere(['city_id' => null]);
-            }
+        if($this->has_responses) {
+            $tasks->join('LEFT JOIN', 'response', 'task.id = response.task_id')
+                ->andWhere(['response.task_id' => null]);
+        }
 
-            switch ($this->period) {
-                case self::PERIOD_DAY:
-                    $tasks->andWhere(['>', 'task.created_at', new Expression('DATE_SUB(NOW(), INTERVAL 1 DAY)')]);
-                    break;
-                case self::PERIOD_WEEK:
-                    $tasks->andWhere(['>', 'task.created_at', new Expression('DATE_SUB(NOW(), INTERVAL 1 WEEK)')]);
-                    break;
-                case self::PERIOD_MONTH:
-                    $tasks->andWhere(['>', 'task.created_at', new Expression('DATE_SUB(NOW(), INTERVAL 1 MONTH)')]);
-                    break;
-            }
+        if($this->is_remote) {
+            $tasks->andWhere(['city_id' => null]);
+        }
 
-            if($this->title) {
-                $tasks->andWhere(['like', 'title', $this->title]);
-            }
+        switch ($this->period) {
+            case self::PERIOD_DAY:
+                $tasks->andWhere(['>', 'task.created_at', new Expression('DATE_SUB(NOW(), INTERVAL 1 DAY)')]);
+                break;
+            case self::PERIOD_WEEK:
+                $tasks->andWhere(['>', 'task.created_at', new Expression('DATE_SUB(NOW(), INTERVAL 1 WEEK)')]);
+                break;
+            case self::PERIOD_MONTH:
+                $tasks->andWhere(['>', 'task.created_at', new Expression('DATE_SUB(NOW(), INTERVAL 1 MONTH)')]);
+                break;
+        }
+
+        if($this->title) {
+            $tasks->andWhere(['like', 'title', $this->title]);
         }
 
         return $tasks->all();
