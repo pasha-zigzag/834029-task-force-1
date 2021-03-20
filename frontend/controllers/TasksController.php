@@ -1,17 +1,29 @@
 <?php
 
-
 namespace frontend\controllers;
 
-
-use common\models\Task;
-use taskforce\models\Task as TaskEntity;
+use common\models\Category;
+use frontend\models\TaskFilterForm;
+use Yii;
+use yii\helpers\ArrayHelper;
 
 class TasksController extends BaseController
 {
     public function actionIndex()
     {
-        $tasks = Task::find()->where(['status' => TaskEntity::STATUS_NEW])->with(['category', 'city'])->all();
-        return $this->render('index', compact('tasks'));
+        $categories = ArrayHelper::map(Category::find()->all(), 'id', 'title');
+        $filter = new TaskFilterForm();
+
+        if(Yii::$app->request->isPost) {
+            $filter->load(Yii::$app->request->post());
+        }
+
+        $tasks = $filter->getTasks();
+
+        return $this->render('index', [
+            'tasks' => $tasks,
+            'filter' => $filter,
+            'categories' => $categories
+        ]);
     }
 }
