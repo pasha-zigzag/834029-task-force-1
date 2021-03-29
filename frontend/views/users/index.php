@@ -7,6 +7,7 @@
 use frontend\components\RatingWidget;
 use yii\helpers\Html;
 use frontend\models\UserFilterForm;
+use common\models\User;
 
 $sort = Yii::$app->request->get('sort') ?? '';
 $active_link_class = 'user__search-item--current';
@@ -18,13 +19,13 @@ $active_link_class = 'user__search-item--current';
         <p>Сортировать по:</p>
         <ul class="user__search-list">
             <li class="user__search-item <?=($sort === UserFilterForm::SORT_RATING) ? $active_link_class : ''?>">
-                <?=Html::a('Рейтингу', ['/users', 'sort' => UserFilterForm::SORT_RATING], ['class' => 'link-regular'])?>
+                <?=Html::a('Рейтингу', ['index', 'sort' => UserFilterForm::SORT_RATING], ['class' => 'link-regular'])?>
             </li>
             <li class="user__search-item <?=($sort === UserFilterForm::SORT_COUNT) ? $active_link_class : ''?>">
-                <?=Html::a('Числу заказов', ['/users', 'sort' => UserFilterForm::SORT_COUNT], ['class' => 'link-regular'])?>
+                <?=Html::a('Числу заказов', ['index', 'sort' => UserFilterForm::SORT_COUNT], ['class' => 'link-regular'])?>
             </li>
             <li class="user__search-item <?=($sort === UserFilterForm::SORT_POPULARITY) ? $active_link_class : ''?>">
-                <?=Html::a('Популярности', ['/users', 'sort' => UserFilterForm::SORT_POPULARITY], ['class' => 'link-regular'])?>
+                <?=Html::a('Популярности', ['index', 'sort' => UserFilterForm::SORT_POPULARITY], ['class' => 'link-regular'])?>
             </li>
         </ul>
     </div>
@@ -33,7 +34,10 @@ $active_link_class = 'user__search-item--current';
         <div class="content-view__feedback-card user__search-wrapper">
             <div class="feedback-card__top">
                 <div class="user__search-icon">
-                    <a href="#"><img src="<?=$user->avatar ?? '/img/no-photo.jpg'?>" width="65" height="65"></a>
+                    <?= Html::a(
+                            Html::img($user->avatar ?? User::NO_PHOTO_PATH, ['width' => 65, 'height' => 65]),
+                            ['view', 'id' => $user->id]
+                    ) ?>
                     <span>
                         <?= Yii::t(
                             'app',
@@ -51,9 +55,7 @@ $active_link_class = 'user__search-item--current';
                 </div>
                 <div class="feedback-card__top--name user__search-card">
                     <p class="link-name">
-                        <a href="#" class="link-regular">
-                            <?=$user->name?>
-                        </a>
+                        <?= Html::a($user->name, ['view', 'id' => $user->id], ['class' => 'link-regular']) ?>
                     </p>
 
                     <?= RatingWidget::widget(['rating' => $user->workerRating]) ?>
@@ -71,7 +73,11 @@ $active_link_class = 'user__search-item--current';
             <div class="link-specialization user__search-link--bottom">
                 <?php if(!empty($user->categories)) : ?>
                     <?php foreach($user->categories as $category) : ?>
-                        <a href="#" class="link-regular"><?=$category->title?></a>
+                        <?= Html::a(
+                                $category->title,
+                                ['/tasks/index', 'category' => $category->id],
+                                ['class' => 'link-regular']
+                        ) ?>
                     <?php endforeach; ?>
                 <?php endif; ?>
             </div>

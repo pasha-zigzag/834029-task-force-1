@@ -12,6 +12,7 @@ class User extends base\User
     public const WORKER_ROLE = 'worker';
     public const CUSTOMER_ROLE = 'customer';
     public const NOW_ONLINE_MINUTES = 30;
+    public const NO_PHOTO_PATH = '/img/no-photo.jpg';
 
     public function getFavoriteUsers() : ActiveQuery
     {
@@ -57,5 +58,41 @@ class User extends base\User
             return 'Сейчас онлайн';
         }
         return 'Был на сайте ' . Yii::$app->formatter->asRelativeTime($this->last_active_time);
+    }
+
+    public function getAge() : string
+    {
+        if(!$this->birthday) {
+            return 'возраст не указан';
+        }
+
+        $birthday = new DateTime($this->birthday);
+        $diff = (new DateTime())->diff($birthday);
+        return Yii::t(
+            'app',
+            '{n, plural, one{# год} few{# лет} many{# лет} other{# лет}}',
+            ['n' => $diff->y]
+        );
+    }
+
+    public function getRegisterDuration() : string
+    {
+        $now = new DateTime();
+        $register = new DateTime($this->register_at);
+        $diff = $register->diff($now);
+
+        if($diff->y) {
+            $diff = 'P'.$diff->y.'Y';
+        } elseif($diff->m) {
+            $diff = 'P'.$diff->m.'M';
+        } elseif($diff->d) {
+            $diff = 'P'.$diff->d.'D';
+        } elseif($diff->h) {
+            $diff = 'P'.$diff->h.'H';
+        } elseif($diff->m) {
+            $diff = 'P'.$diff->m.'M';
+        }
+
+        return Yii::$app->formatter->asDuration($diff) . ' на сайте';
     }
 }

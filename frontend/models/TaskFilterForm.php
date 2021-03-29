@@ -83,4 +83,9 @@ class TaskFilterForm extends Model
 
         return $tasks->all();
     }
+
+    public function setCategory($category_id)
+    {
+        $this->category = [$category_id];
+    }
 }

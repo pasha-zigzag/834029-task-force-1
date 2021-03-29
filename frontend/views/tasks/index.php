@@ -4,6 +4,8 @@
 /* @var $filter frontend\models\TaskFilterForm */
 /* @var $categories array */
 /* @var $filter_data array */
+
+use yii\helpers\Html;
 ?>
 
 <section class="new-task">
@@ -13,12 +15,16 @@
         <?php foreach($tasks as $task) : ?>
             <div class="new-task__card">
                 <div class="new-task__title">
-                    <a href="#" class="link-regular">
-                        <h2><?=$task->title?></h2>
-                    </a>
-                    <a  class="new-task__type link-regular" href="#">
-                        <p><?=$task->category->title?></p>
-                    </a>
+                    <?= Html::a(
+                        Html::tag('h2', $task->title),
+                        ['/tasks/view', 'id' => $task->id],
+                        ['class' => 'new-task__type link-regular']
+                    ) ?>
+                    <?= Html::a(
+                        Html::tag('p', $task->category->title),
+                        ['/tasks/index', 'category' => $task->category->id],
+                        ['class' => 'link-regular']
+                    ) ?>
                 </div>
                 <div class="new-task__icon new-task__icon--<?=$task->category->code?>"></div>
                 <p class="new-task_description">
