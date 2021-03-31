@@ -9,7 +9,7 @@ use yii\db\Expression;
 
 class TaskFilterForm extends Model
 {
-    public $category;
+    public $categories;
     public $title;
     public $period;
     public $has_responses;
@@ -28,7 +28,7 @@ class TaskFilterForm extends Model
     public function rules() : array
     {
         return [
-            ['category', 'exist'],
+            ['categories', 'exist'],
             [['title', 'period'], 'string'],
             ['period', 'in', 'range' => self::PERIOD_ARRAY],
             [['has_responses', 'is_remote'], 'boolean'],
@@ -38,7 +38,7 @@ class TaskFilterForm extends Model
     public function attributeLabels() : array
     {
         return [
-            'category' => 'Категории',
+            'categories' => 'Категории',
             'title' => 'Поиск по названию',
             'period' => 'Период',
             'has_responses' => 'Без откликов',
@@ -52,8 +52,8 @@ class TaskFilterForm extends Model
             ->where(['status' => TaskEntity::STATUS_NEW])
             ->with(['category', 'city']);
 
-        if(!empty($this->category)) {
-            $tasks->andWhere(['in', 'category_id', $this->category]);
+        if(!empty($this->categories)) {
+            $tasks->andWhere(['in', 'category_id', $this->categories]);
         }
 
         if($this->has_responses) {
@@ -84,8 +84,8 @@ class TaskFilterForm extends Model
         return $tasks->all();
     }
 
-    public function setCategory($category_id)
+    public function setCategory(int $category_id) : void
     {
-        $this->category = [$category_id];
+        $this->categories = [$category_id];
     }
 }

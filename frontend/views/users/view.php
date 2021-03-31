@@ -12,7 +12,7 @@ use common\models\User;
     <div class="user__card-wrapper">
         <div class="user__card">
             <?= Html::img(
-                    $user->avatar ?? User::NO_PHOTO_PATH,
+                    $user->avatar ?? Yii::$app->params['user_no_image'],
                     ['width' => 120, 'height' => 120, 'alt' => 'Аватар пользователя']
             ) ?>
             <div class="content-view__headline">
@@ -123,7 +123,7 @@ use common\models\User;
                         <div class="card__review">
                             <?php
                             $avatar = Html::img(
-                                $review->customer->avatar ?? User::NO_PHOTO_PATH,
+                                $review->customer->avatar ?? Yii::$app->params['user_no_image'],
                                 ['width' => 55, 'height' => 54]
                             );
                             echo ($review->customer->role === User::WORKER_ROLE) ?

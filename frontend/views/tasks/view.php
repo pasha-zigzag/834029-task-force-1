@@ -84,7 +84,7 @@ use common\models\User;
                         <div class="feedback-card__top">
                             <?= Html::a(
                                 Html::img(
-                                    $response->worker->avatar ?? User::NO_PHOTO_PATH,
+                                    $response->worker->avatar ?? Yii::$app->params['user_no_image'],
                                     ['width' => 55, 'height' => 55]
                                 ),
                                 ['/users/view', 'id' => $response->worker->id]
@@ -130,7 +130,7 @@ use common\models\User;
             <div class="profile-mini__top">
                 <?php
                 $avatar = Html::img(
-                    $task->customer->avatar ?? User::NO_PHOTO_PATH,
+                    $task->customer->avatar ?? Yii::$app->params['user_no_image'],
                     ['width' => 62, 'height' => 62]
                 );
                 echo ($task->customer->role === User::WORKER_ROLE) ?

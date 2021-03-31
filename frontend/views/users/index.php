@@ -35,7 +35,7 @@ $active_link_class = 'user__search-item--current';
             <div class="feedback-card__top">
                 <div class="user__search-icon">
                     <?= Html::a(
-                            Html::img($user->avatar ?? User::NO_PHOTO_PATH, ['width' => 65, 'height' => 65]),
+                            Html::img($user->avatar ?? Yii::$app->params['user_no_image'], ['width' => 65, 'height' => 65]),
                             ['view', 'id' => $user->id]
                     ) ?>
                     <span>

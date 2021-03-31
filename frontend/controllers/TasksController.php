@@ -17,7 +17,7 @@ class TasksController extends BaseController
         $filter = new TaskFilterForm();
 
         if(Yii::$app->request->get('category')) {
-            $filter->setCategory(Yii::$app->request->get('category'));
+            $filter->setCategory((int)Yii::$app->request->get('category'));
         }
 
         if(Yii::$app->request->isPost) {

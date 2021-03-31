@@ -12,7 +12,6 @@ class User extends base\User
     public const WORKER_ROLE = 'worker';
     public const CUSTOMER_ROLE = 'customer';
     public const NOW_ONLINE_MINUTES = 30;
-    public const NO_PHOTO_PATH = '/img/no-photo.jpg';
 
     public function getFavoriteUsers() : ActiveQuery
     {
@@ -77,6 +76,7 @@ class User extends base\User
 
     public function getRegisterDuration() : string
     {
+        $text = Yii::$app->formatter->asRelativeTime($this->register_at);
         $now = new DateTime();
         $register = new DateTime($this->register_at);
         $diff = $register->diff($now);

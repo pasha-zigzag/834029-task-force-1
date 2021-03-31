@@ -25,7 +25,7 @@ use frontend\models\TaskFilterForm;
         ]); ?>
         <fieldset class="search-task__categories">
             <legend>Категории</legend>
-            <?=$form->field($filter, 'category')->checkboxList($categories, [
+            <?=$form->field($filter, 'categories')->checkboxList($categories, [
                 'tag' => false,
                 'itemOptions' => [
                     'template' => '{label}\n{input}'
