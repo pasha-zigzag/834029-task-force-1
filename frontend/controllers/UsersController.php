@@ -3,9 +3,11 @@
 namespace frontend\controllers;
 
 use common\models\Category;
+use common\models\User;
 use frontend\models\UserFilterForm;
 use Yii;
 use yii\helpers\ArrayHelper;
+use yii\web\NotFoundHttpException;
 
 class UsersController extends BaseController
 {
@@ -26,6 +28,19 @@ class UsersController extends BaseController
             'users' => $users,
             'filter' => $filter,
             'categories' => $categories
+        ]);
+    }
+
+    public function actionView($id)
+    {
+        $user = User::findOne($id);
+
+        if(!$user || $user->role !== User::WORKER_ROLE) {
+            throw new NotFoundHttpException('Страница не найдена');
+        }
+
+        return $this->render('view', [
+            'user' => $user
         ]);
     }
 }
