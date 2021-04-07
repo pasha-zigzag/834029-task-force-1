@@ -10,70 +10,69 @@ use common\models\User;
  */
 class SignupForm extends Model
 {
-    public $username;
+    public $name;
     public $email;
     public $password;
+    public $city_id;
 
 
     /**
      * {@inheritdoc}
      */
-    public function rules()
+    public function rules() : array
     {
         return [
-            ['username', 'trim'],
-            ['username', 'required'],
-            ['username', 'unique', 'targetClass' => '\common\models\User', 'message' => 'This username has already been taken.'],
-            ['username', 'string', 'min' => 2, 'max' => 255],
-
-            ['email', 'trim'],
-            ['email', 'required'],
+            [['name', 'email'], 'trim'],
+            [['name', 'email', 'password', 'city_id'], 'required'],
+            [['name', 'email', 'password'], 'string'],
+            [['password'], 'string', 'min' => 8],
             ['email', 'email'],
-            ['email', 'string', 'max' => 255],
-            ['email', 'unique', 'targetClass' => '\common\models\User', 'message' => 'This email address has already been taken.'],
+            [
+                'email',
+                'unique',
+                'targetClass' => '\common\models\User',
+                'message' => 'Ползователь с таким email уже существует'
+            ],
+            [
+                'city_id',
+                'exist',
+                'targetClass' => '\common\models\City',
+                'targetAttribute' => ['city_id' => 'id'],
+                'message' => 'Неизвестный город'
+            ],
+        ];
+    }
 
-            ['password', 'required'],
-            ['password', 'string', 'min' => Yii::$app->params['user.passwordMinLength']],
+    /**
+     * {@inheritdoc}
+     */
+    public function attributeLabels() : array
+    {
+        return [
+            'name' => 'Ваше имя',
+            'email' => 'Электронная почта',
+            'password' => 'Пароль',
+            'city_id' => 'Город проживания',
         ];
     }
 
     /**
      * Signs user up.
      *
-     * @return bool whether the creating new account was successful and email was sent
+     * @return bool whether the creating new account was successful
      */
-    public function signup()
+    public function signup() : ?bool
     {
         if (!$this->validate()) {
             return null;
         }
         
         $user = new User();
-        $user->username = $this->username;
+        $user->name = $this->name;
         $user->email = $this->email;
-        $user->setPassword($this->password);
-        $user->generateAuthKey();
-        $user->generateEmailVerificationToken();
-        return $user->save() && $this->sendEmail($user);
-
+        $user->password_hash = Yii::$app->getSecurity()->generatePasswordHash($this->password);
+        $user->city_id = $this->city_id;
+        return $user->save();
     }
 
-    /**
-     * Sends confirmation email to user
-     * @param User $user user model to with email should be send
-     * @return bool whether the email was sent
-     */
-    protected function sendEmail($user)
-    {
-        return Yii::$app
-            ->mailer
-            ->compose(
-                ['html' => 'emailVerify-html', 'text' => 'emailVerify-text'],
-                ['user' => $user]
-            )
-            ->setFrom([Yii::$app->params['supportEmail'] => Yii::$app->name . ' robot'])
-            ->setTo($this->email)
-            ->setSubject('Account registration at ' . Yii::$app->name)
-            ->send();
-    }
 }
