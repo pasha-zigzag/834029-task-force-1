@@ -82,67 +82,70 @@ AppAsset::register($this);
             <div class="header__nav">
                 <ul class="header-nav__list site-list">
                     <li class="site-list__item site-list__item--active">
-                        <?=Html::a('Задания', ['tasks/index'])?>
+                        <?=Html::a('Задания', ['/tasks'])?>
                     </li>
                     <li class="site-list__item">
-                        <?=Html::a('Исполнители', ['users/index'])?>
+                        <?=Html::a('Исполнители', ['/users'])?>
                     </li>
                     <li class="site-list__item">
-                        <?=Html::a('Создать задание', ['tasks/create'])?>
+                        <?=Html::a('Создать задание', ['/tasks/create'])?>
                     </li>
                     <li class="site-list__item">
-                        <?=Html::a('Мой профиль', ['profile/index'])?>
+                        <?=Html::a('Мой профиль', ['/profile'])?>
                     </li>
                 </ul>
             </div>
-            <div class="header__town">
-                <select class="multiple-select input town-select" size="1" name="town[]">
-                    <option value="Moscow">Москва</option>
-                    <option selected value="SPB">Санкт-Петербург</option>
-                    <option value="Krasnodar">Краснодар</option>
-                    <option value="Irkutsk">Иркутск</option>
-                    <option value="Vladivostok">Владивосток</option>
-                </select>
-            </div>
-            <div class="header__lightbulb"></div>
-            <div class="lightbulb__pop-up">
-                <h3>Новые события</h3>
-                <p class="lightbulb__new-task lightbulb__new-task--message">
-                    Новое сообщение в чате
-                    <a href="view.html" class="link-regular">«Помочь с курсовой»</a>
-                </p>
-                <p class="lightbulb__new-task lightbulb__new-task--executor">
-                    Выбран исполнитель для
-                    <a href="view.html" class="link-regular">«Помочь с курсовой»</a>
-                </p>
-                <p class="lightbulb__new-task lightbulb__new-task--close">
-                    Завершено задание
-                    <a href="view.html" class="link-regular">«Помочь с курсовой»</a>
-                </p>
-            </div>
-            <div class="header__account">
-                <a class="header__account-photo">
-                    <img src="/img/user-photo.png"
-                         width="43" height="44"
-                         alt="Аватар пользователя">
-                </a>
-                <span class="header__account-name">
-                 Василий
-             </span>
-            </div>
-            <div class="account__pop-up">
-                <ul class="account__pop-up-list">
-                    <li>
-                        <a href="mylist.html">Мои задания</a>
-                    </li>
-                    <li>
-                        <a href="account.html">Настройки</a>
-                    </li>
-                    <li>
-                        <a href="landing.html">Выход</a>
-                    </li>
-                </ul>
-            </div>
+
+            <?php if(Yii::$app->controller->id !== 'register') : ?>
+                <div class="header__town">
+                    <select class="multiple-select input town-select" size="1" name="town[]">
+                        <option value="Moscow">Москва</option>
+                        <option selected value="SPB">Санкт-Петербург</option>
+                        <option value="Krasnodar">Краснодар</option>
+                        <option value="Irkutsk">Иркутск</option>
+                        <option value="Vladivostok">Владивосток</option>
+                    </select>
+                </div>
+                <div class="header__lightbulb"></div>
+                <div class="lightbulb__pop-up">
+                    <h3>Новые события</h3>
+                    <p class="lightbulb__new-task lightbulb__new-task--message">
+                        Новое сообщение в чате
+                        <a href="view.html" class="link-regular">«Помочь с курсовой»</a>
+                    </p>
+                    <p class="lightbulb__new-task lightbulb__new-task--executor">
+                        Выбран исполнитель для
+                        <a href="view.html" class="link-regular">«Помочь с курсовой»</a>
+                    </p>
+                    <p class="lightbulb__new-task lightbulb__new-task--close">
+                        Завершено задание
+                        <a href="view.html" class="link-regular">«Помочь с курсовой»</a>
+                    </p>
+                </div>
+                <div class="header__account">
+                    <a class="header__account-photo">
+                        <img src="/img/user-photo.png"
+                             width="43" height="44"
+                             alt="Аватар пользователя">
+                    </a>
+                    <span class="header__account-name">
+                     Василий
+                 </span>
+                </div>
+                <div class="account__pop-up">
+                    <ul class="account__pop-up-list">
+                        <li>
+                            <a href="mylist.html">Мои задания</a>
+                        </li>
+                        <li>
+                            <a href="account.html">Настройки</a>
+                        </li>
+                        <li>
+                            <a href="landing.html">Выход</a>
+                        </li>
+                    </ul>
+                </div>
+            <?php endif; ?>
         </div>
     </header>
     <main class="page-main">
@@ -167,22 +170,22 @@ AppAsset::register($this);
             <div class="page-footer__links">
                 <ul class="links__list">
                     <li class="links__item">
-                        <?=Html::a('Задания', ['tasks/index'])?>
+                        <?=Html::a('Задания', ['/tasks'])?>
                     </li>
                     <li class="links__item">
-                        <?=Html::a('Мой профиль', ['profile/index'])?>
+                        <?=Html::a('Мой профиль', ['/profile'])?>
                     </li>
                     <li class="links__item">
-                        <?=Html::a('Исполнители', ['users/index'])?>
+                        <?=Html::a('Исполнители', ['/users'])?>
                     </li>
                     <li class="links__item">
-                        <?=Html::a('Регистрация', ['register'])?>
+                        <?=Html::a('Регистрация', ['/register'])?>
                     </li>
                     <li class="links__item">
-                        <?=Html::a('Создать задание', ['tasks/create'])?>
+                        <?=Html::a('Создать задание', ['/tasks/create'])?>
                     </li>
                     <li class="links__item">
-                        <?=Html::a('Справка', ['faq'])?>
+                        <?=Html::a('Справка', ['/faq'])?>
                     </li>
                 </ul>
             </div>
@@ -194,6 +197,22 @@ AppAsset::register($this);
                          alt="Логотип HTML Academy">
                 </a>
             </div>
+
+            <?php if(Yii::$app->controller->id === 'register') : ?>
+                <div class="clipart-woman">
+                    <img src="./img/clipart-woman.png" width="238" height="450">
+                </div>
+                <div class="clipart-message">
+                    <div class="clipart-message-text">
+                        <h2>Знаете ли вы, что?</h2>
+                        <p>После регистрации вам будет доступно более
+                            двух тысяч заданий из двадцати разных категорий.</p>
+                        <p>В среднем, наши исполнители зарабатывают
+                            от 500 рублей в час.</p>
+                    </div>
+                </div>
+            <?php endif; ?>
+
         </div>
     </footer>
 </div>
