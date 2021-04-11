@@ -4,13 +4,16 @@ namespace common\models;
 
 use DateTime;
 use Yii;
+use yii\db\ActiveRecord;
 use yii\helpers\ArrayHelper;
 use yii\db\ActiveQuery;
+use yii\web\IdentityInterface;
 
-class User extends base\User
+class User extends base\User implements IdentityInterface
 {
     public const WORKER_ROLE = 'worker';
     public const CUSTOMER_ROLE = 'customer';
+    public const NOW_ONLINE_MINUTES = 30;
 
     public function getFavoriteUsers() : ActiveQuery
     {
@@ -92,5 +95,35 @@ class User extends base\User
         }
 
         return Yii::$app->formatter->asDuration($diff) . ' на сайте';
+    }
+
+    public function validatePassword($password) : bool
+    {
+        return Yii::$app->security->validatePassword($password, $this->password_hash);
+    }
+
+    public static function findIdentity($id) : ActiveRecord
+    {
+        return self::findOne($id);
+    }
+
+    public static function findIdentityByAccessToken($token, $type = null)
+    {
+        // TODO: Implement findIdentityByAccessToken() method.
+    }
+
+    public function getId()
+    {
+        return $this->getPrimaryKey();
+    }
+
+    public function getAuthKey()
+    {
+        // TODO: Implement getAuthKey() method.
+    }
+
+    public function validateAuthKey($authKey)
+    {
+        // TODO: Implement validateAuthKey() method.
     }
 }

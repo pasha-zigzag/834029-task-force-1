@@ -6,6 +6,7 @@ use Yii;
 
 class Task extends base\Task
 {
+    public int $short_description_length = 50;
     /**
      * Gets query for [[Responses]].
      *
@@ -24,5 +25,16 @@ class Task extends base\Task
     public function getCustomer(): \yii\db\ActiveQuery
     {
         return $this->hasOne(User::class, ['id' => 'customer_id']);
+    }
+
+    public function getShortDescription() : string
+    {
+        if (strlen($this->description) > $this->short_description_length) {
+            $description = substr($this->description, 0, $this->short_description_length);
+            $description = trim($description);
+            return $description . "...";
+        } else {
+            return $this->description;
+        }
     }
 }

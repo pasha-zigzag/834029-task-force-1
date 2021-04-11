@@ -7,11 +7,27 @@ namespace frontend\controllers;
 use common\models\City;
 use frontend\models\SignupForm;
 use Yii;
+use yii\filters\AccessControl;
 use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 
 class RegisterController extends Controller
 {
+    public function behaviors() : array
+    {
+        return [
+            'access' => [
+                'class' => AccessControl::class,
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'roles' => ['?']
+                    ]
+                ]
+            ]
+        ];
+    }
+
     public function actionIndex()
     {
         $model = new SignupForm();
