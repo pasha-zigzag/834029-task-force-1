@@ -6,7 +6,7 @@ use Yii;
 
 class Task extends base\Task
 {
-    public int $short_description_length = 50;
+    public const SHORT_DESCRIPTION_LENGTH = 50;
     /**
      * Gets query for [[Responses]].
      *
@@ -29,8 +29,8 @@ class Task extends base\Task
 
     public function getShortDescription() : string
     {
-        if (strlen($this->description) > $this->short_description_length) {
-            $description = substr($this->description, 0, $this->short_description_length);
+        if (strlen($this->description) > self::SHORT_DESCRIPTION_LENGTH) {
+            $description = substr($this->description, 0, self::SHORT_DESCRIPTION_LENGTH);
             $description = trim($description);
             return $description . "...";
         } else {
