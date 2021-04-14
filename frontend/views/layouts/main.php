@@ -123,14 +123,17 @@ AppAsset::register($this);
                     </p>
                 </div>
                 <div class="header__account">
-                    <a class="header__account-photo">
-                        <img src="/img/user-photo.png"
-                             width="43" height="44"
-                             alt="Аватар пользователя">
-                    </a>
+                    <?= Html::a(
+                        Html::img(
+                            $user->avatar ?? Yii::$app->params['user_no_image'],
+                            ['width' => 43, 'height' => 44, 'alt' => 'Аватар пользователя']
+                        ),
+                        ['/profile'],
+                        ['class' => 'header__account-photo']
+                    ) ?>
                     <span class="header__account-name">
-                     Василий
-                 </span>
+                    <?=Yii::$app->user->identity->name?>
+                    </span>
                 </div>
                 <div class="account__pop-up">
                     <ul class="account__pop-up-list">
@@ -141,7 +144,7 @@ AppAsset::register($this);
                             <a href="account.html">Настройки</a>
                         </li>
                         <li>
-                            <a href="landing.html">Выход</a>
+                            <?=Html::a('Выход', ['/logout'], ['data-method' => 'POST'])?>
                         </li>
                     </ul>
                 </div>

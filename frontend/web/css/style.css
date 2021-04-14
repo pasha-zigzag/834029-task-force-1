@@ -309,6 +309,10 @@ footer {
   height: 44px;
   cursor: pointer; }
 
+.header__account-photo img {
+  border-radius: 5px;
+}
+
 .header__account-name {
   position: relative;
   padding-right: 15px;
