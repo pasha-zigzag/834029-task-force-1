@@ -78,11 +78,15 @@ class TasksController extends BaseController
 
         if(Yii::$app->request->isPost) {
             $model->load(Yii::$app->request->post());
-            if ($model->saveTask()) {
+
+            $customer_id = Yii::$app->user->identity->getId();
+            $attach_id = Yii::$app->session->get('attach_id');
+
+            if ($model->createTask($customer_id, $attach_id)) {
                 $this->redirect(['view', 'id' => $model->id]);
             }
         } else {
-            Yii::$app->session->set('attach_id', uniqid());
+            Yii::$app->session->set('attach_id', random_int(File::MIN_ATTACH_ID, File::MAX_ATTACH_ID));
         }
 
         return $this->render('create', compact('model', 'categories'));
@@ -92,23 +96,7 @@ class TasksController extends BaseController
     {
         if (Yii::$app->request->isAjax) {
             $files = UploadedFile::getInstancesByName('files');
-            $upload_dir = Yii::getAlias('@webroot/uploads');
-
-            if(!file_exists($upload_dir)) {
-                FileHelper::createDirectory($upload_dir);
-            }
-
-            foreach ($files as $file) {
-                $newname = Yii::$app->security->generateRandomString(8) . '.' . $file->getExtension();
-
-                $file->saveAs($upload_dir . '/' . $newname);
-
-                $task_file = new File();
-                $task_file->name = $newname;
-                $task_file->source = '/uploads/' . $newname;
-                $task_file->attach_id = Yii::$app->session->get('attach_id');
-                $task_file->save();
-            }
+            File::saveFiles($files, Yii::$app->session->get('attach_id'));
 
             return true;
         }

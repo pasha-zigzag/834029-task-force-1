@@ -28,10 +28,10 @@ class Task extends base\Task
     {
         return [
             [['title', 'description', 'category_id', 'customer_id'], 'required'],
-            [['title', 'description', 'status', 'attach_id'], 'string'],
+            [['title', 'description', 'status'], 'string'],
             [['title'], 'string', 'min' => 10],
             [['description'], 'string', 'min' => 30],
-            [['price', 'category_id', 'city_id', 'customer_id', 'worker_id'], 'integer'],
+            [['price', 'category_id', 'city_id', 'customer_id', 'worker_id', 'attach_id'], 'integer'],
             [['price'], 'compare', 'compareValue' => 0, 'operator' => '>'],
             [['created_at', 'finish_at'], 'safe'],
             [['latitude', 'longitude'], 'number'],
@@ -55,6 +55,7 @@ class Task extends base\Task
             'category_id' => 'Категория',
             'finish_at' => 'Сроки исполнения',
             'city_id' => 'Локация',
+            'attach_id' => 'файл',
         ];
     }
 
@@ -94,11 +95,11 @@ class Task extends base\Task
         }
     }
 
-    public function saveTask() : bool
+    public function createTask($customer_id, $attach_id = null) : bool
     {
         $this->status = \taskforce\models\Task::STATUS_NEW;
-        $this->customer_id = Yii::$app->user->identity->getId();
-        $this->attach_id = Yii::$app->session->get('attach_id');
+        $this->customer_id = $customer_id;
+        $this->attach_id = $attach_id;
 
         if (!$this->validate()) {
             return false;
