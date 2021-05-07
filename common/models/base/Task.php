@@ -20,8 +20,8 @@ use Yii;
  * @property int|null $city_id
  * @property int $customer_id
  * @property int|null $worker_id
- * @property int|null $attach_id
  *
+ * @property File[] $files
  * @property Message[] $messages
  * @property Response[] $responses
  * @property Review[] $reviews
@@ -47,11 +47,10 @@ class Task extends \yii\db\ActiveRecord
     {
         return [
             [['title', 'description', 'category_id', 'customer_id'], 'required'],
-            [['title', 'description', 'status', 'attach_id'], 'string'],
+            [['title', 'description', 'status'], 'string'],
             [['price', 'category_id', 'city_id', 'customer_id', 'worker_id'], 'integer'],
             [['created_at', 'finish_at'], 'safe'],
             [['latitude', 'longitude'], 'number'],
-            [['attach_id'], 'unique'],
             [['category_id'], 'exist', 'skipOnError' => true, 'targetClass' => Category::className(), 'targetAttribute' => ['category_id' => 'id']],
             [['city_id'], 'exist', 'skipOnError' => true, 'targetClass' => City::className(), 'targetAttribute' => ['city_id' => 'id']],
             [['customer_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['customer_id' => 'id']],
@@ -78,8 +77,17 @@ class Task extends \yii\db\ActiveRecord
             'city_id' => 'City ID',
             'customer_id' => 'Customer ID',
             'worker_id' => 'Worker ID',
-            'attach_id' => 'Attach ID',
         ];
+    }
+
+    /**
+     * Gets query for [[Files]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getFiles()
+    {
+        return $this->hasMany(File::className(), ['task_id' => 'id']);
     }
 
     /**
