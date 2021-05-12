@@ -10,9 +10,7 @@ use Yii;
  * @property int $id
  * @property string $name
  * @property string $source
- * @property int|null $task_id
- *
- * @property Task $task
+ * @property int|null $attach_id
  */
 class File extends \yii\db\ActiveRecord
 {
@@ -30,10 +28,8 @@ class File extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['name', 'source'], 'required'],
-            [['name', 'source'], 'string'],
-            [['task_id'], 'integer'],
-            [['task_id'], 'exist', 'skipOnError' => true, 'targetClass' => Task::className(), 'targetAttribute' => ['task_id' => 'id']],
+            [['name', 'source', 'attach_id'], 'required'],
+            [['name', 'source', 'attach_id'], 'string'],
         ];
     }
 
@@ -46,17 +42,7 @@ class File extends \yii\db\ActiveRecord
             'id' => 'ID',
             'name' => 'Name',
             'source' => 'Source',
-            'task_id' => 'Task ID',
+            'attach_id' => 'Attach ID',
         ];
-    }
-
-    /**
-     * Gets query for [[Task]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
-    public function getTask()
-    {
-        return $this->hasOne(Task::className(), ['id' => 'task_id']);
     }
 }

@@ -80,10 +80,13 @@ class TasksController extends BaseController
             $model->load(Yii::$app->request->post());
 
             $customer_id = Yii::$app->user->identity->getId();
+            $attach_id = Yii::$app->session->get('attach_id');
 
-            if ($model->createTask($customer_id)) {
+            if ($model->createTask($customer_id, $attach_id)) {
                 $this->redirect(['view', 'id' => $model->id]);
             }
+        } else {
+            Yii::$app->session->set('attach_id', random_int(File::MIN_ATTACH_ID, File::MAX_ATTACH_ID));
         }
 
         return $this->render('create', compact('model', 'categories'));
@@ -91,11 +94,11 @@ class TasksController extends BaseController
 
     public function actionLoadFiles()
     {
-//        if (Yii::$app->request->isAjax) {
-//            $files = UploadedFile::getInstancesByName('files');
-//            File::saveFiles($files);
-//
-//            return true;
-//        }
+        if (Yii::$app->request->isAjax) {
+            $files = UploadedFile::getInstancesByName('files');
+            File::saveFiles($files, Yii::$app->session->get('attach_id'));
+
+            return true;
+        }
     }
 }
