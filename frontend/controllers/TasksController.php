@@ -6,6 +6,7 @@ use common\models\Category;
 use common\models\File;
 use common\models\Task;
 use common\models\User;
+use frontend\models\CreateTaskForm;
 use frontend\models\TaskFilterForm;
 use Yii;
 use yii\bootstrap\ActiveForm;
@@ -66,14 +67,12 @@ class TasksController extends BaseController
             throw new NotFoundHttpException('Страница не найдена');
         }
 
-        return $this->render('view', [
-            'task' => $task
-        ]);
+        return $this->render('view', compact('task'));
     }
 
     public function actionCreate()
     {
-        $model = new Task();
+        $model = new CreateTaskForm();
         $categories = Category::find()->select(['title'])->indexBy('id')->column();
 
         if(Yii::$app->request->isPost) {
@@ -82,17 +81,18 @@ class TasksController extends BaseController
             $customer_id = Yii::$app->user->identity->getId();
             $attach_id = Yii::$app->session->get('attach_id');
 
-            if ($model->createTask($customer_id, $attach_id)) {
-                $this->redirect(['view', 'id' => $model->id]);
+            if ($model->validate() && $task = $model->createTask($customer_id, $attach_id)) {
+                Yii::$app->session->remove('attach_id');
+                $this->redirect(['view', 'id' => $task->id]);
             }
-        } else {
-            Yii::$app->session->set('attach_id', random_int(File::MIN_ATTACH_ID, File::MAX_ATTACH_ID));
         }
+
+        Yii::$app->session->set('attach_id', uniqid());
 
         return $this->render('create', compact('model', 'categories'));
     }
 
-    public function actionLoadFiles()
+    public function actionLoadFiles() : bool
     {
         if (Yii::$app->request->isAjax) {
             $files = UploadedFile::getInstancesByName('files');
@@ -100,5 +100,7 @@ class TasksController extends BaseController
 
             return true;
         }
+
+        return false;
     }
 }

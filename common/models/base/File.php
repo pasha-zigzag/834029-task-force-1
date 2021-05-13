@@ -10,7 +10,7 @@ use Yii;
  * @property int $id
  * @property string $name
  * @property string $source
- * @property int|null $attach_id
+ * @property string $attach_id
  */
 class File extends \yii\db\ActiveRecord
 {

@@ -7,10 +7,7 @@ use yii\helpers\FileHelper;
 
 class File extends base\File
 {
-    public const MIN_ATTACH_ID = -2147483648;
-    public const MAX_ATTACH_ID = 2147483647;
-
-    public static function saveFiles(array $files, $attach_id)
+    public static function saveFiles(array $files, string $attach_id) : void
     {
         $upload_dir = Yii::getAlias('@webroot/uploads');
 
@@ -19,13 +16,13 @@ class File extends base\File
         }
 
         foreach ($files as $file) {
-            $newname = Yii::$app->security->generateRandomString(8) . '.' . $file->getExtension();
+            $new_name = Yii::$app->security->generateRandomString(8) . '.' . $file->getExtension();
 
-            $file->saveAs($upload_dir . '/' . $newname);
+            $file->saveAs($upload_dir . '/' . $new_name);
 
-            $task_file = new File();
-            $task_file->name = $newname;
-            $task_file->source = '/uploads/' . $newname;
+            $task_file = new self();
+            $task_file->name = $new_name;
+            $task_file->source = '/uploads/' . $new_name;
             $task_file->attach_id = $attach_id;
             $task_file->save();
         }

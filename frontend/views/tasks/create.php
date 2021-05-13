@@ -3,7 +3,7 @@
 use yii\bootstrap\ActiveForm;
 use yii\helpers\Html;
 
-/* @var $model \common\models\Task */
+/* @var $model \frontend\models\CreateTaskForm */
 /* @var $categories array */
 
 ?>
@@ -29,7 +29,6 @@ use yii\helpers\Html;
 
         <?= $form->field($model, 'title')
                  ->input('text', ['class' => 'input textarea', 'placeholder' => 'Повесить полку'])
-                 ->label('Мне нужно')
                  ->hint('Кратко опишите суть работы')?>
 
         <?= $form->field($model, 'description')

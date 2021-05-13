@@ -2,7 +2,7 @@
 
 namespace common\models;
 
-use Yii;
+use common\models\base\File;
 use yii\behaviors\TimestampBehavior;
 use yii\db\Expression;
 
@@ -28,14 +28,15 @@ class Task extends base\Task
     {
         return [
             [['title', 'description', 'category_id', 'customer_id'], 'required'],
-            [['title', 'description', 'status'], 'string'],
+            [['title', 'description', 'status', 'attach_id'], 'string'],
             [['title'], 'string', 'min' => 10],
             [['description'], 'string', 'min' => 30],
-            [['price', 'category_id', 'city_id', 'customer_id', 'worker_id', 'attach_id'], 'integer'],
+            [['price', 'category_id', 'city_id', 'customer_id', 'worker_id'], 'integer'],
             [['price'], 'compare', 'compareValue' => 0, 'operator' => '>'],
             [['created_at', 'finish_at'], 'safe'],
             [['latitude', 'longitude'], 'number'],
             [['attach_id'], 'unique'],
+            [['attach_id'], 'exist', 'skipOnError' => true, 'targetClass' => File::class, 'targetAttribute' => ['attach_id' => 'attach_id']],
             [['category_id'], 'exist', 'skipOnError' => true, 'targetClass' => Category::class, 'targetAttribute' => ['category_id' => 'id']],
             [['city_id'], 'exist', 'skipOnError' => true, 'targetClass' => City::class, 'targetAttribute' => ['city_id' => 'id']],
             [['customer_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['customer_id' => 'id']],
@@ -55,7 +56,7 @@ class Task extends base\Task
             'category_id' => 'Категория',
             'finish_at' => 'Сроки исполнения',
             'city_id' => 'Локация',
-            'attach_id' => 'файл',
+            'attach_id' => 'Файл',
         ];
     }
 
@@ -95,19 +96,5 @@ class Task extends base\Task
         }
     }
 
-    public function createTask($customer_id, $attach_id = null) : bool
-    {
-        $this->status = \taskforce\models\Task::STATUS_NEW;
-        $this->customer_id = $customer_id;
-        $this->attach_id = $attach_id;
 
-        if (!$this->validate()) {
-            return false;
-        }
-
-        $this->save();
-
-        Yii::$app->session->remove('attach_id');
-        return true;
-    }
 }

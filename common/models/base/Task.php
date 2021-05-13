@@ -20,11 +20,12 @@ use Yii;
  * @property int|null $city_id
  * @property int $customer_id
  * @property int|null $worker_id
- * @property int|null $attach_id
+ * @property string|null $attach_id
  *
  * @property Message[] $messages
  * @property Response[] $responses
  * @property Review[] $reviews
+ * @property File $attach
  * @property Category $category
  * @property City $city
  * @property User $customer
@@ -47,11 +48,13 @@ class Task extends \yii\db\ActiveRecord
     {
         return [
             [['title', 'description', 'category_id', 'customer_id'], 'required'],
-            [['title', 'description', 'status', 'attach_id'], 'string'],
+            [['title', 'description', 'status'], 'string'],
             [['price', 'category_id', 'city_id', 'customer_id', 'worker_id'], 'integer'],
             [['created_at', 'finish_at'], 'safe'],
             [['latitude', 'longitude'], 'number'],
+            [['attach_id'], 'string', 'max' => 255],
             [['attach_id'], 'unique'],
+            [['attach_id'], 'exist', 'skipOnError' => true, 'targetClass' => File::className(), 'targetAttribute' => ['attach_id' => 'attach_id']],
             [['category_id'], 'exist', 'skipOnError' => true, 'targetClass' => Category::className(), 'targetAttribute' => ['category_id' => 'id']],
             [['city_id'], 'exist', 'skipOnError' => true, 'targetClass' => City::className(), 'targetAttribute' => ['city_id' => 'id']],
             [['customer_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['customer_id' => 'id']],
@@ -110,6 +113,16 @@ class Task extends \yii\db\ActiveRecord
     public function getReviews()
     {
         return $this->hasMany(Review::className(), ['task_id' => 'id']);
+    }
+
+    /**
+     * Gets query for [[Attach]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getAttach()
+    {
+        return $this->hasOne(File::className(), ['attach_id' => 'attach_id']);
     }
 
     /**
