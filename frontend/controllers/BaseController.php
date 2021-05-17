@@ -28,9 +28,12 @@ class BaseController extends Controller
 
     public function beforeAction($action)
     {
-        $user = User::findOne(Yii::$app->user->getId());
-        $user->last_active_time = date('Y-m-d H:i:s');
-        $user->save();
+        if(!Yii::$app->user->isGuest) {
+            $user = User::findOne(Yii::$app->user->getId());
+            $user->last_active_time = date('Y-m-d H:i:s');
+            $user->save();
+        }
+
         return parent::beforeAction($action);
     }
 }
