@@ -49,10 +49,17 @@ class CreateTaskForm extends Model
     public function createTask($customer_id, $attach_id = null) : ?Task
     {
         $task = new Task();
-        $task->load($this->toArray(), '');
+        $task->title = $this->title;
+        $task->description = $this->description;
+        $task->description = $this->description;
+        $task->category_id = $this->category_id;
+        $task->price = $this->price;
+        $task->finish_at = $this->finish_at;
         $task->status = \taskforce\models\Task::STATUS_NEW;
         $task->customer_id = $customer_id;
         $task->attach_id = $attach_id;
+
+        // TODO city_id, longitude, latitude
 
         if ($task->validate() && $task->save()) {
             return $task;

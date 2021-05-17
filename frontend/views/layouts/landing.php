@@ -1,7 +1,10 @@
 
 <?php
 
+use frontend\assets\LandingAsset;
 use yii\helpers\Html;
+
+LandingAsset::register($this);
 
 $this->beginPage();
 ?>
@@ -12,8 +15,6 @@ $this->beginPage();
     <?php $this->registerCsrfMetaTags() ?>
     <title><?= Html::encode($this->title) ?></title>
     <?php $this->head() ?>
-    <link rel="stylesheet" href="css/normalize.css">
-    <link rel="stylesheet" href="css/style.css">
 </head>
 <body class="landing">
 <?php $this->beginBody() ?>
@@ -109,7 +110,7 @@ $this->beginPage();
 
 </div>
 <div class="overlay" <?=Yii::$app->request->isPost ? 'style="display:block;"' : ''?>></div>
-<script src="js/main.js"></script>
+
 <?php $this->endBody() ?>
 </body>
 </html>

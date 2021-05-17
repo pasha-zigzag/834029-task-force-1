@@ -2,10 +2,12 @@
 
 use yii\bootstrap\ActiveForm;
 use yii\helpers\Html;
+use frontend\assets\DropzoneAsset;
 
 /* @var $model \frontend\models\CreateTaskForm */
 /* @var $categories array */
 
+DropzoneAsset::register($this);
 ?>
 
 <section class="create__task">
